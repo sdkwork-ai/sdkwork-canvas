@@ -1,13 +1,12 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "kind": "sdkwork.database.module",
   "moduleId": "canvas",
   "serviceCode": "CANVAS",
   "displayName": "Canvas Database",
   "owner": "canvas-platform",
   "engines": [
-    "postgres",
-    "sqlite"
+    "postgres"
   ],
   "defaultEngine": "postgres",
   "tablePrefix": "canvas_",
@@ -16,7 +15,7 @@
   "baselineAnchorTable": "canvas_workspace",
   "modules": [],
   "lifecycle": {
-    "autoMigrate": true,
+    "autoMigrate": false,
     "seedOnBoot": false,
     "defaultSeedLocale": "zh-CN",
     "defaultSeedProfile": "standard",
@@ -41,5 +40,6 @@
     "seeds": "seeds",
     "baseline": "ddl/baseline",
     "drift": "drift"
-  }
+  },
+  "databaseRole": "authoritative-server"
 }

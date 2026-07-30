@@ -12,6 +12,7 @@ path = "src/lib.rs"
 [dependencies]
 axum.workspace = true
 tokio.workspace = true
+sdkwork-web-bootstrap.workspace = true
 sdkwork-canvas-pages-service.workspace = true
 sdkwork-routes-canvas-http-auth.workspace = true
 sdkwork-routes-canvas-app-api.workspace = true

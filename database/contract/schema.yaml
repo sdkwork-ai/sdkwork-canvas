@@ -1,12 +1,12 @@
 schema_version: 1
 kind: sdkwork.database.schema
+database_role: authoritative-server
 module_id: canvas
 contract_version: 1.0.0
 owner_team: canvas-platform
 compliance_level: L2
 engines:
   - postgres
-  - sqlite
 table_prefix: canvas_
 tables:
   - name: canvas_workspace

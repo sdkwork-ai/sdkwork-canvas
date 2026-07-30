@@ -40,7 +40,6 @@ function parseArgs(argv) {
     deploymentProfile: 'standalone',
     serviceLayout: 'unified-process',
     runtimeTarget: 'browser',
-    database: 'postgres',
     dryRun: false,
     help: false,
   };
@@ -63,11 +62,6 @@ function parseArgs(argv) {
     }
     if (arg === '--runtime-target') {
       settings.runtimeTarget = argv[index + 1] ?? settings.runtimeTarget;
-      index += 1;
-      continue;
-    }
-    if (arg === '--database') {
-      settings.database = argv[index + 1] ?? settings.database;
       index += 1;
       continue;
     }
@@ -97,7 +91,6 @@ Options:
   --deployment-profile <standalone|cloud>           Default: standalone
   --service-layout <unified-process|split-services> Default: unified-process
   --runtime-target <browser|desktop>                Default: browser
-  --database <postgres|sqlite>                      Default: postgres
   --dry-run                                         Print plan without executing
   --help, -h
 `);
@@ -220,7 +213,6 @@ async function main() {
       {
         SDKWORK_CANVAS_PROFILE_ID: profileId,
         SDKWORK_CANVAS_DEV_MODE: '1',
-        SDKWORK_CANVAS_DATABASE_ENGINE: settings.database,
         ...IAM_APPLICATION_BOOTSTRAP_ENV,
       },
     ),

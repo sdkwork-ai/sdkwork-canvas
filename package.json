@@ -1,4 +1,4 @@
-﻿{
+{
   "license": "AGPL-3.0-or-later",
   "name": "sdkwork-canvas",
   "version": "0.1.0",
@@ -12,10 +12,8 @@
     "dev": "pnpm dev:standalone",
     "dev:browser": "pnpm dev:browser:postgres:standalone",
     "dev:browser:postgres": "pnpm exec sdkwork-app dev --runtime-target browser --deployment-profile standalone",
-    "dev:browser:sqlite": "node scripts/canvas-dev.mjs --target browser --deployment-profile standalone --database sqlite",
     "dev:desktop": "pnpm dev:desktop:postgres:standalone",
     "dev:desktop:postgres": "pnpm exec sdkwork-app dev --runtime-target desktop --deployment-profile standalone",
-    "dev:desktop:sqlite": "node scripts/canvas-dev.mjs --target desktop --deployment-profile standalone --database sqlite",
     "dev:server": "pnpm exec sdkwork-app dev --runtime-target server --deployment-profile standalone",
     "gateway:run:standalone": "node scripts/gateway-standalone-run.mjs",
     "gateway:build:standalone": "cargo build -p sdkwork-api-canvas-standalone-gateway --bin sdkwork-api-canvas-standalone-gateway",
@@ -76,7 +74,7 @@
     "db:drift": "cargo run --manifest-path ../sdkwork-database/Cargo.toml -p sdkwork-database-cli -- --app-root . drift",
     "db:drift:check": "cargo run --manifest-path ../sdkwork-database/Cargo.toml -p sdkwork-database-cli -- --app-root . drift-check",
     "db:bootstrap": "cargo run --manifest-path ../sdkwork-database/Cargo.toml -p sdkwork-database-cli -- --app-root . bootstrap",
-    "db:materialize:contract": "node ../sdkwork-specs/tools/materialize-database-contract-from-baseline.mjs --root . --baseline database/ddl/baseline/postgres/0001_canvas_baseline.sql --module-id canvas --owner canvas-platform --prefixes canvas_ --engines postgres,sqlite",
+    "db:materialize:contract": "node ../sdkwork-specs/tools/materialize-database-contract-from-baseline.mjs --root . --baseline database/ddl/baseline/postgres/0001_canvas_baseline.sql --module-id canvas --owner canvas-platform --prefixes canvas_ --engines postgres",
     "topology:plan": "node ../sdkwork-app-topology/scripts/sdkwork-topology.mjs plan --root . --spec specs/topology.spec.json",
     "_sdkwork:build": "node scripts/release/build-sdkwork-canvas-production.mjs",
     "_sdkwork:test": "node --test scripts/verify-canvas-standard-architecture.test.mjs scripts/verify-canvas-contract-foundation.test.mjs scripts/verify-canvas-rust-service-skeleton.test.mjs scripts/verify-canvas-topology.test.mjs tests/contract/database-framework.contract.test.mjs",
