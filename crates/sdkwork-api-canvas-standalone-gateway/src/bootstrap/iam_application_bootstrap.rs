@@ -6,7 +6,7 @@ use sdkwork_iam_embedded_application_bootstrap::{
 
 pub async fn ensure_canvas_tenant_application_bootstrap() -> Result<(), String> {
     let app_root = resolve_canvas_app_root();
-    sdkwork_iam_database_host::unified_postgres_env::apply_unified_claw_postgres_env(&app_root);
+    sdkwork_iam_database_host::unified_postgres_env::apply_unified_cloud_postgres_env(&app_root);
     ensure_tenant_application_from_app_root_with_env_and_fallback(
         resolve_bootstrap_environment().as_str(),
         app_root,
