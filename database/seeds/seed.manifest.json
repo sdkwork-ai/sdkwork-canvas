@@ -12,7 +12,8 @@
     "ko-KR"
   ],
   "activeLocales": [
-    "zh-CN"
+    "zh-CN",
+    "en-US"
   ],
   "profiles": {
     "minimal": {

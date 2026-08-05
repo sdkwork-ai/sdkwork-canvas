@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.deployment-index",
+  "application": "sdkwork-canvas",
+  "defaultProfile": "standalone.development",
+  "environments": {
+    "development": {
+      "applicationOrigin": "https://sdkwork-canvas-development.sdkwork.com/",
+      "cloudApiBaseUrl": "https://api-development.sdkwork.com/"
+    },
+    "production": {
+      "applicationOrigin": "https://sdkwork-canvas-production.sdkwork.com/",
+      "cloudApiBaseUrl": "https://api-production.sdkwork.com/"
+    }
+  },
+  "profiles": {
+    "cloud.development": {
+      "config": "configs\\topology\\cloud.development.env"
+    },
+    "cloud.production": {
+      "config": "configs\\topology\\cloud.production.env"
+    },
+    "standalone.development": {
+      "config": "configs\\topology\\standalone.development.env"
+    },
+    "standalone.production": {
+      "config": "configs\\topology\\standalone.production.env"
+    }
+  }
+}
