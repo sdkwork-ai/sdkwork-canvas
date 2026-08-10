@@ -18,30 +18,37 @@
 
 BEGIN;
 
+ALTER TABLE canvas_workspace ADD COLUMN IF NOT EXISTS organization_id TEXT NOT NULL DEFAULT '0';
 UPDATE canvas_workspace SET organization_id = '0' WHERE organization_id IS NULL;
 ALTER TABLE canvas_workspace ALTER COLUMN organization_id SET DEFAULT '0';
 ALTER TABLE canvas_workspace ALTER COLUMN organization_id SET NOT NULL;
 
+ALTER TABLE canvas_page ADD COLUMN IF NOT EXISTS organization_id TEXT NOT NULL DEFAULT '0';
 UPDATE canvas_page SET organization_id = '0' WHERE organization_id IS NULL;
 ALTER TABLE canvas_page ALTER COLUMN organization_id SET DEFAULT '0';
 ALTER TABLE canvas_page ALTER COLUMN organization_id SET NOT NULL;
 
+ALTER TABLE canvas_page_search_projection ADD COLUMN IF NOT EXISTS organization_id TEXT NOT NULL DEFAULT '0';
 UPDATE canvas_page_search_projection SET organization_id = '0' WHERE organization_id IS NULL;
 ALTER TABLE canvas_page_search_projection ALTER COLUMN organization_id SET DEFAULT '0';
 ALTER TABLE canvas_page_search_projection ALTER COLUMN organization_id SET NOT NULL;
 
+ALTER TABLE canvas_ai_job ADD COLUMN IF NOT EXISTS organization_id TEXT NOT NULL DEFAULT '0';
 UPDATE canvas_ai_job SET organization_id = '0' WHERE organization_id IS NULL;
 ALTER TABLE canvas_ai_job ALTER COLUMN organization_id SET DEFAULT '0';
 ALTER TABLE canvas_ai_job ALTER COLUMN organization_id SET NOT NULL;
 
+ALTER TABLE canvas_ai_job_source ADD COLUMN IF NOT EXISTS organization_id TEXT NOT NULL DEFAULT '0';
 UPDATE canvas_ai_job_source SET organization_id = '0' WHERE organization_id IS NULL;
 ALTER TABLE canvas_ai_job_source ALTER COLUMN organization_id SET DEFAULT '0';
 ALTER TABLE canvas_ai_job_source ALTER COLUMN organization_id SET NOT NULL;
 
+ALTER TABLE canvas_ai_suggestion ADD COLUMN IF NOT EXISTS organization_id TEXT NOT NULL DEFAULT '0';
 UPDATE canvas_ai_suggestion SET organization_id = '0' WHERE organization_id IS NULL;
 ALTER TABLE canvas_ai_suggestion ALTER COLUMN organization_id SET DEFAULT '0';
 ALTER TABLE canvas_ai_suggestion ALTER COLUMN organization_id SET NOT NULL;
 
+ALTER TABLE canvas_ai_feedback ADD COLUMN IF NOT EXISTS organization_id TEXT NOT NULL DEFAULT '0';
 UPDATE canvas_ai_feedback SET organization_id = '0' WHERE organization_id IS NULL;
 ALTER TABLE canvas_ai_feedback ALTER COLUMN organization_id SET DEFAULT '0';
 ALTER TABLE canvas_ai_feedback ALTER COLUMN organization_id SET NOT NULL;
