@@ -7,7 +7,7 @@ use sdkwork_canvas_pages_service::service::CanvasPagesService;
 
 use super::drive_port::CanvasApiDrivePort;
 
-pub async fn build_canvas_service(
+pub async fn assemble_canvas_service_from_env(
 ) -> Result<CanvasPagesService<SqlCanvasStore, CanvasApiDrivePort>, String> {
     sqlx::any::install_default_drivers();
     let config = DatabaseConfig::from_env("canvas")

@@ -53,6 +53,7 @@ sdkwork-database-spi = { path = "../sdkwork-database/crates/sdkwork-database-spi
 sdkwork-database-repository = { path = "../sdkwork-database/crates/sdkwork-database-repository" }
 
 sdkwork-iam-web-adapter = { path = "../sdkwork-iam/crates/sdkwork-iam-web-adapter" }
+sdkwork-api-iam-assembly = { path = "../sdkwork-iam/crates/sdkwork-api-iam-assembly" }
 sdkwork-iam-embedded-application-bootstrap = { path = "../sdkwork-iam/crates/sdkwork-iam-embedded-application-bootstrap" }
 sdkwork-iam-database-host = { path = "../sdkwork-iam/crates/sdkwork-iam-database-host" }
 sdkwork-routes-iam-app-api = { path = "../sdkwork-iam/crates/sdkwork-routes-iam-app-api" }
