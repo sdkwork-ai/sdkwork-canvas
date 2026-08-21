@@ -3,14 +3,13 @@
 
 application:
   code: canvas
-  serviceLayout: split-services
 
 profiles:
   standalone:
     services:
       - name: sdkwork-api-canvas-standalone-gateway
         kind: http
-        port: 3900
+        port: 8787
         binary: sdkwork-api-canvas-standalone-gateway
         routes:
           - prefix: /app/v3/api/canvas

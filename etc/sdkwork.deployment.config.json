@@ -2,29 +2,50 @@
   "schemaVersion": 1,
   "kind": "sdkwork.deployment-index",
   "application": "sdkwork-canvas",
+  "topology": "../specs/topology.spec.json",
   "defaultProfile": "standalone.development",
   "environments": {
     "development": {
-      "applicationOrigin": "https://sdkwork-canvas-development.sdkwork.com/",
-      "cloudApiBaseUrl": "https://api-development.sdkwork.com/"
+      "applicationOrigin": "http://127.0.0.1:8787/",
+      "cloudApiBaseUrl": "https://api-dev.sdkwork.com/"
+    },
+    "test": {
+      "applicationOrigin": "https://canvas-test.sdkwork.com/",
+      "cloudApiBaseUrl": "https://api-test.sdkwork.com/"
+    },
+    "staging": {
+      "applicationOrigin": "https://canvas-staging.sdkwork.com/",
+      "cloudApiBaseUrl": "https://api-staging.sdkwork.com/"
     },
     "production": {
-      "applicationOrigin": "https://sdkwork-canvas-production.sdkwork.com/",
-      "cloudApiBaseUrl": "https://api-production.sdkwork.com/"
+      "applicationOrigin": "https://canvas.sdkwork.com/",
+      "cloudApiBaseUrl": "https://api.sdkwork.com/"
     }
   },
   "profiles": {
-    "cloud.development": {
-      "config": "configs\\topology\\cloud.development.env"
-    },
-    "cloud.production": {
-      "config": "configs\\topology\\cloud.production.env"
-    },
     "standalone.development": {
-      "config": "configs\\topology\\standalone.development.env"
+      "config": "topology/standalone.development.env"
+    },
+    "standalone.test": {
+      "config": "topology/standalone.test.env"
+    },
+    "standalone.staging": {
+      "config": "topology/standalone.staging.env"
     },
     "standalone.production": {
-      "config": "configs\\topology\\standalone.production.env"
+      "config": "topology/standalone.production.env"
+    },
+    "cloud.development": {
+      "config": "topology/cloud.development.env"
+    },
+    "cloud.test": {
+      "config": "topology/cloud.test.env"
+    },
+    "cloud.staging": {
+      "config": "topology/cloud.staging.env"
+    },
+    "cloud.production": {
+      "config": "topology/cloud.production.env"
     }
   }
 }

@@ -25,23 +25,23 @@ async function readJson(relativePath) {
   return JSON.parse(await read(relativePath));
 }
 
-test('declares v2 topology spec and profile env files for sdkwork-canvas', async () => {
+test('declares v5 topology spec and profile env files for sdkwork-canvas', async () => {
   assert.equal(await exists('specs/topology.spec.json'), true);
   assert.equal(await exists('scripts/lib/canvas-topology.mjs'), true);
   assert.equal(await exists('scripts/canvas-dev.mjs'), true);
-  assert.equal(await exists('configs/topology/README.md'), true);
+  assert.equal(await exists('etc/topology/README.md'), true);
 
   const spec = await readJson('specs/topology.spec.json');
-  assert.equal(spec.schemaVersion, 2);
+  assert.equal(spec.schemaVersion, 5);
   assert.equal(spec.kind, 'sdkwork.app.topology');
   assert.equal(spec.appId, 'sdkwork-canvas');
   assert.equal(spec.archetype, 'application-http-gateway');
-  assert.equal(spec.defaults.developmentProfileId, 'standalone.split-services.development');
+  assert.equal(spec.defaults.developmentProfileId, 'standalone.development');
   assert.ok(spec.surfaces['application.public-ingress']);
   assert.ok(spec.surfaces['platform.api-gateway']);
 
   for (const profileId of [
-    'standalone.split-services.development',
+    'standalone.development',
     'standalone.production',
     'cloud.development',
     'cloud.production',
@@ -58,7 +58,7 @@ test('declares v2 topology spec and profile env files for sdkwork-canvas', async
 test('root package.json wires @sdkwork/app-topology and standard dev scripts', async () => {
   const packageJson = await readJson('package.json');
   assert.match(packageJson.dependencies['@sdkwork/app-topology'], /workspace:\*|file:\.\.\/sdkwork-app-topology/);
-  assert.match(packageJson.scripts['dev:browser:postgres:standalone'], /scripts\/canvas-dev\.mjs/);
+  assert.match(packageJson.scripts['dev:browser:postgres:standalone'], /deployment-profile standalone/);
   assert.match(packageJson.scripts['topology:validate'], /sdkwork-topology\.mjs validate/);
 });
 
@@ -100,8 +100,8 @@ test('canvas dev orchestrator uses orchestration spec and gateway config', async
   const devScript = await read('scripts/canvas-dev.mjs');
   assert.match(devScript, /listOrchestrationProcesses/);
   assert.match(devScript, /buildProcessesFromOrchestration/);
-  assert.match(devScript, /resolveCloudGatewayConfigPath/);
-  assert.match(devScript, /--config/);
+  assert.match(devScript, /loadProfile/);
+  assert.match(devScript, /resolveDevProfileId/);
 });
 
 test('canvas standalone-gateway requires topology bind env without hardcoded fallback', async () => {

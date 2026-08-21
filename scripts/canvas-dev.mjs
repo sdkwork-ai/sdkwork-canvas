@@ -38,7 +38,6 @@ function pnpmCommand() {
 function parseArgs(argv) {
   const settings = {
     deploymentProfile: 'standalone',
-    serviceLayout: 'unified-process',
     runtimeTarget: 'browser',
     dryRun: false,
     help: false,
@@ -56,9 +55,7 @@ function parseArgs(argv) {
       continue;
     }
     if (arg === '--service-layout') {
-      settings.serviceLayout = argv[index + 1] ?? settings.serviceLayout;
-      index += 1;
-      continue;
+      throw new Error('--service-layout is retired; topology v5 uses <deploymentProfile>.<environment>');
     }
     if (arg === '--runtime-target') {
       settings.runtimeTarget = argv[index + 1] ?? settings.runtimeTarget;
@@ -72,7 +69,7 @@ function parseArgs(argv) {
       throw new Error('--target is retired; use --runtime-target browser|desktop');
     }
     if (arg === '--topology') {
-      throw new Error('--topology is retired; use --deployment-profile and --service-layout');
+      throw new Error('--topology is retired; use --deployment-profile standalone|cloud');
     }
     if (arg === '--dry-run') {
       settings.dryRun = true;
@@ -85,11 +82,10 @@ function parseArgs(argv) {
 function printHelp() {
   console.log(`Usage: node scripts/canvas-dev.mjs [options]
 
-Topology-aware Notes dev entry. Loads configs/topology profile env via @sdkwork/app-topology.
+Topology-aware Canvas dev entry. Loads etc/topology profile env via @sdkwork/app-topology.
 
 Options:
   --deployment-profile <standalone|cloud>           Default: standalone
-  --service-layout <unified-process|split-services> Default: unified-process
   --runtime-target <browser|desktop>                Default: browser
   --dry-run                                         Print plan without executing
   --help, -h
@@ -200,7 +196,7 @@ async function main() {
     process.exit(0);
   }
 
-  const profileId = resolveDevProfileId(settings.deploymentProfile, settings.serviceLayout)
+  const profileId = resolveDevProfileId(settings.deploymentProfile)
     || DEFAULT_DEV_PROFILE_ID;
   const profileEnv = loadProfile(profileId);
   const runtimeEnv = mergeRepoDevBootstrapAccessTokenEnv({

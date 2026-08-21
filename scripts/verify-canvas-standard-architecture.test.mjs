@@ -83,8 +83,8 @@ test('PC application root under apps/sdkwork-canvas-pc', () => {
 
 test('declares SDKWORK_DEPLOY_SPEC deployments/deploy.yaml', () => {
   const deploy = read('deployments/deploy.yaml');
-  assert.match(deploy, /^version:\s*1/m);
-  assert.match(deploy, /defaultProfile:\s*cloud\.split-services\.production/);
+  assert.match(deploy, /^version:\s*2/m);
+  assert.match(deploy, /defaultProfile:\s*cloud\.production/);
   assert.match(deploy, /domain:\s*canvas\.sdkwork\.com/);
 });
 

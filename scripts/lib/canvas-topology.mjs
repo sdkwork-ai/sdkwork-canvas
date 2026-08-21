@@ -28,12 +28,11 @@ const spec = loadTopologySpec(SPEC_PATH);
 const runtime = createTopologyRuntime(spec, REPO_ROOT);
 
 export const VALID_DEPLOYMENT_PROFILES = runtime.deploymentProfileValues;
-export const VALID_SERVICE_LAYOUTS = runtime.serviceLayoutValues;
 export const VALID_ENVIRONMENTS = runtime.environmentValues;
 export const DEFAULT_DEV_PROFILE_ID = runtime.defaults.developmentProfileId;
 export const DEFAULT_PRODUCTION_PROFILE_ID = runtime.defaults.productionProfileId;
 export const DEFAULT_BUILD_PROFILE_ID = runtime.defaults.desktopBuildProfileId;
-export const DEFAULT_STANDALONE_BUILD_PROFILE_ID = 'standalone.unified-process.production';
+export const DEFAULT_STANDALONE_BUILD_PROFILE_ID = 'standalone.production';
 export const DEFAULT_GATEWAY_BIND = runtime.defaults.gatewayBind;
 
 export const APPLICATION_PUBLIC_INGRESS_PACKAGE_PROFILE = 'application-public-ingress';
@@ -53,10 +52,9 @@ export function resolveDefaultAppSdkBaseUrl(profileEnv = {}) {
   );
 }
 
-export function resolveDevProfileId(deploymentProfile, serviceLayout = 'split-services') {
+export function resolveDevProfileId(deploymentProfile) {
   runtime.assertDeploymentProfile(deploymentProfile);
-  runtime.assertServiceLayout(serviceLayout);
-  return buildProfileId(deploymentProfile, serviceLayout, 'development');
+  return buildProfileId(deploymentProfile, 'development');
 }
 
 export const loadProfile = runtime.loadProfile;
@@ -64,7 +62,6 @@ export const applyProfileEnv = runtime.applyProfileEnv;
 export const mergeRuntimeEnv = runtime.mergeRuntimeEnv;
 export const loadEnvFile = runtime.loadEnvFile;
 export const assertDeploymentProfile = runtime.assertDeploymentProfile;
-export const assertServiceLayout = runtime.assertServiceLayout;
 export const resolveSurfaceHttpUrl = runtime.resolveSurfaceHttpUrl.bind(runtime);
 export const resolveSurfaceBind = runtime.resolveSurfaceBind.bind(runtime);
 export const shouldAutostartGateway = runtime.shouldAutostartGateway;
