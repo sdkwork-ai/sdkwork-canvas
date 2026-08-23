@@ -1,6 +1,5 @@
 version: 2
 defaultProfile: cloud.production
-
 profiles:
   cloud.test:
     deployment:
@@ -21,6 +20,26 @@ profiles:
         tls: sdkwork.com
         mode: web+api
         web: pc
+      - domain: canvas-test.birdcoder.com
+        tls: birdcoder.com
+        mode: web+api
+        web: pc
+      - domain: canvas-test.dtupay.com
+        tls: dtupay.com
+        mode: web+api
+        web: pc
+      - domain: canvas-test.sdkwork.cn
+        tls: sdkwork.cn
+        mode: web+api
+        web: pc
+      - domain: canvas-test.birdcoder.cn
+        tls: birdcoder.cn
+        mode: web+api
+        web: pc
+      - domain: canvas-test.dtupay.cn
+        tls: dtupay.cn
+        mode: web+api
+        web: pc
     packages: []
     overrides:
       topology:
@@ -29,7 +48,6 @@ profiles:
         env: etc/topology/cloud.test.env
       kubernetes:
         reference: deployments/kubernetes/
-
   cloud.staging:
     deployment:
       deploymentProfile: cloud
@@ -49,6 +67,26 @@ profiles:
         tls: sdkwork.com
         mode: web+api
         web: pc
+      - domain: canvas-staging.birdcoder.com
+        tls: birdcoder.com
+        mode: web+api
+        web: pc
+      - domain: canvas-staging.dtupay.com
+        tls: dtupay.com
+        mode: web+api
+        web: pc
+      - domain: canvas-staging.sdkwork.cn
+        tls: sdkwork.cn
+        mode: web+api
+        web: pc
+      - domain: canvas-staging.birdcoder.cn
+        tls: birdcoder.cn
+        mode: web+api
+        web: pc
+      - domain: canvas-staging.dtupay.cn
+        tls: dtupay.cn
+        mode: web+api
+        web: pc
     packages: []
     overrides:
       topology:
@@ -57,7 +95,6 @@ profiles:
         env: etc/topology/cloud.staging.env
       kubernetes:
         reference: deployments/kubernetes/
-
   cloud.production:
     deployment:
       deploymentProfile: cloud
@@ -77,6 +114,26 @@ profiles:
         tls: sdkwork.com
         mode: web+api
         web: pc
+      - domain: canvas.birdcoder.com
+        tls: birdcoder.com
+        mode: web+api
+        web: pc
+      - domain: canvas.dtupay.com
+        tls: dtupay.com
+        mode: web+api
+        web: pc
+      - domain: canvas.sdkwork.cn
+        tls: sdkwork.cn
+        mode: web+api
+        web: pc
+      - domain: canvas.birdcoder.cn
+        tls: birdcoder.cn
+        mode: web+api
+        web: pc
+      - domain: canvas.dtupay.cn
+        tls: dtupay.cn
+        mode: web+api
+        web: pc
     packages: []
     overrides:
       topology:
@@ -85,7 +142,6 @@ profiles:
         env: etc/topology/cloud.production.env
       kubernetes:
         reference: deployments/kubernetes/
-
   standalone.production:
     deployment:
       deploymentProfile: standalone
@@ -101,8 +157,33 @@ profiles:
     install:
       layout: binary-package
     expose:
-      - domain: canvas.internal.example
-        tls: managed
+      - domain: canvas.sdkwork.com
+        tls: sdkwork.com
+        mode: web+api
+        web: pc
+        apiPathStyle: full-prefix
+      - domain: canvas.birdcoder.com
+        tls: birdcoder.com
+        mode: web+api
+        web: pc
+        apiPathStyle: full-prefix
+      - domain: canvas.dtupay.com
+        tls: dtupay.com
+        mode: web+api
+        web: pc
+        apiPathStyle: full-prefix
+      - domain: canvas.sdkwork.cn
+        tls: sdkwork.cn
+        mode: web+api
+        web: pc
+        apiPathStyle: full-prefix
+      - domain: canvas.birdcoder.cn
+        tls: birdcoder.cn
+        mode: web+api
+        web: pc
+        apiPathStyle: full-prefix
+      - domain: canvas.dtupay.cn
+        tls: dtupay.cn
         mode: web+api
         web: pc
         apiPathStyle: full-prefix
