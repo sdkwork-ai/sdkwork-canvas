@@ -40,6 +40,38 @@ profiles:
         tls: dtupay.cn
         mode: web+api
         web: pc
+      - domain: canvas-test.skubc.com
+        tls: skubc.com
+        mode: web+api
+        web: pc
+      - domain: canvas-test.skubc.cn
+        tls: skubc.cn
+        mode: web+api
+        web: pc
+      - domain: canvas-test.zowalk.com
+        tls: zowalk.com
+        mode: web+api
+        web: pc
+      - domain: canvas-test.zowalk.cn
+        tls: zowalk.cn
+        mode: web+api
+        web: pc
+      - domain: canvas-test.offer86.com
+        tls: offer86.com
+        mode: web+api
+        web: pc
+      - domain: canvas-test.offer86.cn
+        tls: offer86.cn
+        mode: web+api
+        web: pc
+      - domain: canvas-test.86offer.com
+        tls: 86offer.com
+        mode: web+api
+        web: pc
+      - domain: canvas-test.86offer.cn
+        tls: 86offer.cn
+        mode: web+api
+        web: pc
     packages: []
     overrides:
       topology:
@@ -87,6 +119,38 @@ profiles:
         tls: dtupay.cn
         mode: web+api
         web: pc
+      - domain: canvas-staging.skubc.com
+        tls: skubc.com
+        mode: web+api
+        web: pc
+      - domain: canvas-staging.skubc.cn
+        tls: skubc.cn
+        mode: web+api
+        web: pc
+      - domain: canvas-staging.zowalk.com
+        tls: zowalk.com
+        mode: web+api
+        web: pc
+      - domain: canvas-staging.zowalk.cn
+        tls: zowalk.cn
+        mode: web+api
+        web: pc
+      - domain: canvas-staging.offer86.com
+        tls: offer86.com
+        mode: web+api
+        web: pc
+      - domain: canvas-staging.offer86.cn
+        tls: offer86.cn
+        mode: web+api
+        web: pc
+      - domain: canvas-staging.86offer.com
+        tls: 86offer.com
+        mode: web+api
+        web: pc
+      - domain: canvas-staging.86offer.cn
+        tls: 86offer.cn
+        mode: web+api
+        web: pc
     packages: []
     overrides:
       topology:
@@ -132,6 +196,38 @@ profiles:
         web: pc
       - domain: canvas.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: pc
+      - domain: canvas.skubc.com
+        tls: skubc.com
+        mode: web+api
+        web: pc
+      - domain: canvas.skubc.cn
+        tls: skubc.cn
+        mode: web+api
+        web: pc
+      - domain: canvas.zowalk.com
+        tls: zowalk.com
+        mode: web+api
+        web: pc
+      - domain: canvas.zowalk.cn
+        tls: zowalk.cn
+        mode: web+api
+        web: pc
+      - domain: canvas.offer86.com
+        tls: offer86.com
+        mode: web+api
+        web: pc
+      - domain: canvas.offer86.cn
+        tls: offer86.cn
+        mode: web+api
+        web: pc
+      - domain: canvas.86offer.com
+        tls: 86offer.com
+        mode: web+api
+        web: pc
+      - domain: canvas.86offer.cn
+        tls: 86offer.cn
         mode: web+api
         web: pc
     packages: []
@@ -184,6 +280,46 @@ profiles:
         apiPathStyle: full-prefix
       - domain: canvas.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: pc
+        apiPathStyle: full-prefix
+      - domain: canvas.skubc.com
+        tls: skubc.com
+        mode: web+api
+        web: pc
+        apiPathStyle: full-prefix
+      - domain: canvas.skubc.cn
+        tls: skubc.cn
+        mode: web+api
+        web: pc
+        apiPathStyle: full-prefix
+      - domain: canvas.zowalk.com
+        tls: zowalk.com
+        mode: web+api
+        web: pc
+        apiPathStyle: full-prefix
+      - domain: canvas.zowalk.cn
+        tls: zowalk.cn
+        mode: web+api
+        web: pc
+        apiPathStyle: full-prefix
+      - domain: canvas.offer86.com
+        tls: offer86.com
+        mode: web+api
+        web: pc
+        apiPathStyle: full-prefix
+      - domain: canvas.offer86.cn
+        tls: offer86.cn
+        mode: web+api
+        web: pc
+        apiPathStyle: full-prefix
+      - domain: canvas.86offer.com
+        tls: 86offer.com
+        mode: web+api
+        web: pc
+        apiPathStyle: full-prefix
+      - domain: canvas.86offer.cn
+        tls: 86offer.cn
         mode: web+api
         web: pc
         apiPathStyle: full-prefix
