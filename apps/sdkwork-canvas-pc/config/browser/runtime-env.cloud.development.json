@@ -1,7 +1,11 @@
 {
+  "environment": "development",
+  "deploymentProfile": "cloud",
+  "profileId": "cloud.development",
+  "runtimeTarget": "browser",
+  "browserOriginMode": "cross-origin",
   "$comment": "浏览器公开运行时配置(development 示例)。仅包含公开的 SDK 基址、特性开关与应用元数据,严禁包含密钥、数据库地址、令牌或私有服务端点。",
   "env": "development",
-  "deploymentProfile": "standalone",
   "app": {
     "appId": "sdkwork-canvas-pc",
     "displayName": "SDKWork Canvas",
@@ -21,5 +25,10 @@
     "userPreferences": true,
     "tenantConfig": false,
     "systemSettings": false
-  }
+  },
+  "appApiBaseUrl": "https://api-dev.sdkwork.com",
+  "backendApiBaseUrl": "https://api-dev.sdkwork.com",
+  "driveAppApiBaseUrl": "https://api-dev.sdkwork.com",
+  "appbaseAppApiBaseUrl": "https://api-dev.sdkwork.com",
+  "deployAppApiBaseUrl": "https://api-dev.sdkwork.com"
 }

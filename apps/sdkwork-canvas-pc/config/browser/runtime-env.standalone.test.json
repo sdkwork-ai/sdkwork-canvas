@@ -1,0 +1,34 @@
+{
+  "environment": "test",
+  "deploymentProfile": "standalone",
+  "profileId": "standalone.test",
+  "runtimeTarget": "browser",
+  "browserOriginMode": "same-origin",
+  "$comment": "浏览器公开运行时配置(development 示例)。仅包含公开的 SDK 基址、特性开关与应用元数据,严禁包含密钥、数据库地址、令牌或私有服务端点。",
+  "env": "development",
+  "app": {
+    "appId": "sdkwork-canvas-pc",
+    "displayName": "SDKWork Canvas",
+    "version": "0.1.0"
+  },
+  "api": {
+    "baseUrl": "http://localhost:8080",
+    "appApiPrefix": "/api/app/v3",
+    "backendApiPrefix": "/api/backend/v3"
+  },
+  "runtime": {
+    "defaultLocale": "zh-CN",
+    "defaultTheme": "light",
+    "timezone": "Asia/Shanghai"
+  },
+  "featureFlags": {
+    "userPreferences": true,
+    "tenantConfig": false,
+    "systemSettings": false
+  },
+  "appApiBaseUrl": "/",
+  "backendApiBaseUrl": "/",
+  "driveAppApiBaseUrl": "/",
+  "appbaseAppApiBaseUrl": "/",
+  "deployAppApiBaseUrl": "/"
+}
