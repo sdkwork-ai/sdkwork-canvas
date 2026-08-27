@@ -5,10 +5,10 @@
 tablet_surface = "pc"
 
 [app_roots.pc_static_by_environment]
-development = "apps/sdkwork-canvas-pc/dist/dev"
-test = "apps/sdkwork-canvas-pc/dist/test"
-staging = "apps/sdkwork-canvas-pc/dist/staging"
-production = "apps/sdkwork-canvas-pc/dist/prod"
+development = "apps/sdkwork-canvas-pc/dist/standalone/dev"
+test = "apps/sdkwork-canvas-pc/dist/standalone/test"
+staging = "apps/sdkwork-canvas-pc/dist/standalone/staging"
+production = "apps/sdkwork-canvas-pc/dist/standalone/prod"
 
 [app_roots.static_fallback_by_environment]
 development = "deployments/webserver/static"
