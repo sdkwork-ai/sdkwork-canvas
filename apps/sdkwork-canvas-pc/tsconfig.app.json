@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src",
+    "packages/*/src",
+    "server.ts"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "node_modules.*",
+    ".vite",
+    "tmp",
+    "target",
+    "e2e",
+    "scripts"
+  ]
+}
