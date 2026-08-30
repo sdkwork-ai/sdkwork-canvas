@@ -46,27 +46,6 @@
       "tokenSecret": "SDKWORK_RELEASE_TOKEN"
     },
     {
-      "id": "sdkwork-web-framework",
-      "repository": "sdkwork-ai/sdkwork-web-framework",
-      "ref": "main",
-      "refInput": "SDKWORK_WEB_FRAMEWORK_REF",
-      "tokenSecret": "SDKWORK_RELEASE_TOKEN"
-    },
-    {
-      "id": "sdkwork-utils",
-      "repository": "sdkwork-ai/sdkwork-utils",
-      "ref": "main",
-      "refInput": "SDKWORK_UTILS_REF",
-      "tokenSecret": "SDKWORK_RELEASE_TOKEN"
-    },
-    {
-      "id": "sdkwork-ui",
-      "repository": "sdkwork-ai/sdkwork-ui",
-      "ref": "main",
-      "refInput": "SDKWORK_UI_REF",
-      "tokenSecret": "SDKWORK_RELEASE_TOKEN"
-    },
-    {
       "id": "sdkwork-drive",
       "repository": "sdkwork-ai/sdkwork-drive",
       "ref": "main",
@@ -81,6 +60,12 @@
       "tokenSecret": "SDKWORK_RELEASE_TOKEN"
     },
     {
+      "id": "sdkwork-id",
+      "repository": "sdkwork-ai/sdkwork-id",
+      "refInput": "SDKWORK_ID_REF",
+      "tokenSecret": "SDKWORK_RELEASE_TOKEN"
+    },
+    {
       "id": "sdkwork-sdk-commons",
       "repository": "sdkwork-ai/sdkwork-sdk-commons",
       "ref": "main",
@@ -92,6 +77,27 @@
       "repository": "sdkwork-ai/sdkwork-sdk-generator",
       "ref": "main",
       "refInput": "SDKWORK_SDK_GENERATOR_REF",
+      "tokenSecret": "SDKWORK_RELEASE_TOKEN"
+    },
+    {
+      "id": "sdkwork-ui",
+      "repository": "sdkwork-ai/sdkwork-ui",
+      "ref": "main",
+      "refInput": "SDKWORK_UI_REF",
+      "tokenSecret": "SDKWORK_RELEASE_TOKEN"
+    },
+    {
+      "id": "sdkwork-utils",
+      "repository": "sdkwork-ai/sdkwork-utils",
+      "ref": "main",
+      "refInput": "SDKWORK_UTILS_REF",
+      "tokenSecret": "SDKWORK_RELEASE_TOKEN"
+    },
+    {
+      "id": "sdkwork-web-framework",
+      "repository": "sdkwork-ai/sdkwork-web-framework",
+      "ref": "main",
+      "refInput": "SDKWORK_WEB_FRAMEWORK_REF",
       "tokenSecret": "SDKWORK_RELEASE_TOKEN"
     }
   ],
@@ -109,9 +115,13 @@
       "profile": "server",
       "platform": "linux",
       "architecture": "x64",
-      "formats": ["tar.gz"],
+      "formats": [
+        "tar.gz"
+      ],
       "runner": "ubuntu-latest",
-      "outputGlobs": ["dist/release-packages/*"],
+      "outputGlobs": [
+        "dist/release-packages/*"
+      ],
       "deploymentProfile": "standalone",
       "runtimeTarget": "server"
     },
@@ -120,9 +130,13 @@
       "profile": "server",
       "platform": "linux",
       "architecture": "arm64",
-      "formats": ["tar.gz"],
+      "formats": [
+        "tar.gz"
+      ],
       "runner": "ubuntu-24.04-arm",
-      "outputGlobs": ["dist/release-packages/*"],
+      "outputGlobs": [
+        "dist/release-packages/*"
+      ],
       "deploymentProfile": "standalone",
       "runtimeTarget": "server"
     },
@@ -131,9 +145,13 @@
       "profile": "server",
       "platform": "macos",
       "architecture": "arm64",
-      "formats": ["tar.gz"],
+      "formats": [
+        "tar.gz"
+      ],
       "runner": "macos-latest",
-      "outputGlobs": ["dist/release-packages/*"],
+      "outputGlobs": [
+        "dist/release-packages/*"
+      ],
       "deploymentProfile": "standalone",
       "runtimeTarget": "server"
     },
@@ -142,9 +160,13 @@
       "profile": "server",
       "platform": "windows",
       "architecture": "x64",
-      "formats": ["zip"],
+      "formats": [
+        "zip"
+      ],
       "runner": "windows-latest",
-      "outputGlobs": ["dist/release-packages/*"],
+      "outputGlobs": [
+        "dist/release-packages/*"
+      ],
       "deploymentProfile": "standalone",
       "runtimeTarget": "server"
     },
@@ -153,9 +175,13 @@
       "profile": "browser",
       "platform": "web",
       "architecture": "universal",
-      "formats": ["zip"],
+      "formats": [
+        "zip"
+      ],
       "runner": "ubuntu-latest",
-      "outputGlobs": ["apps/sdkwork-canvas-pc/dist/*"],
+      "outputGlobs": [
+        "apps/sdkwork-canvas-pc/dist/*"
+      ],
       "deploymentProfile": "cloud",
       "runtimeTarget": "browser"
     },
@@ -164,9 +190,13 @@
       "profile": "browser",
       "platform": "web",
       "architecture": "universal",
-      "formats": ["zip"],
+      "formats": [
+        "zip"
+      ],
       "runner": "ubuntu-latest",
-      "outputGlobs": ["apps/sdkwork-canvas-pc/dist/*"],
+      "outputGlobs": [
+        "apps/sdkwork-canvas-pc/dist/*"
+      ],
       "deploymentProfile": "standalone",
       "runtimeTarget": "browser"
     }
