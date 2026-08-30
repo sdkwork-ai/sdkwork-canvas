@@ -113,6 +113,9 @@ impl ApiProblem {
             },
             message: self.message.clone(),
             retry_after_seconds: None,
+            auth_profile: None,
+            failed_stage: None,
+            reason: None,
         }
     }
 

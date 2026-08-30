@@ -4,9 +4,9 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use async_trait::async_trait;
 use reqwest::Client;
 use sdkwork_drive_app_sdk_generated_rust::{
-    CompleteUploadSessionRequest, CompletedUploadPart, CreateUploadSessionRequest,
-    MarkUploaderPartUploadedRequest, NodeCommandRequest, PrepareUploaderUploadRequest,
-    PresignUploadPartRequest, SdkworkAppClient, SdkworkError,
+    CompleteUploadSessionRequest, CompletedUploadPart, CreateDownloadUrlRequest,
+    CreateUploadSessionRequest, MarkUploaderPartUploadedRequest, NodeCommandRequest,
+    PrepareUploaderUploadRequest, PresignUploadPartRequest, SdkworkAppClient, SdkworkError,
 };
 use sdkwork_canvas_pages_service::domain::{
     DrivePageContentSnapshot, DriveVersionPage, DriveVersionSummary, PageInfo,
@@ -241,11 +241,9 @@ impl SdkDriveAppFacadePageContentPort {
         let prepared = self
             .client
             .drive()
-            .uploader_uploads_prepare(&PrepareUploaderUploadRequest {
+            .uploader_uploads_create(&PrepareUploaderUploadRequest {
                 id: upload_item_id.clone(),
                 task_id,
-                organization_id: Some(organization_id.to_string()),
-                anonymous_id: None,
                 app_resource_type: CANVAS_RESOURCE_TYPE.to_string(),
                 app_resource_id: page_id.to_string(),
                 upload_profile_code: Some(CANVAS_UPLOAD_PROFILE.to_string()),
@@ -343,7 +341,7 @@ impl SdkDriveAppFacadePageContentPort {
         let presigned = self
             .client
             .drive()
-            .upload_sessions_parts_presign(
+            .upload_sessions_parts_update(
                 upload_session_id,
                 1,
                 &PresignUploadPartRequest {
@@ -384,7 +382,7 @@ impl SdkDriveAppFacadePageContentPort {
         if let Some(upload_item_id) = upload_item_id {
             self.client
                 .drive()
-                .uploader_uploads_parts_mark_uploaded(
+                .uploader_uploads_parts_update(
                     upload_item_id,
                     1,
                     &MarkUploaderPartUploadedRequest {
@@ -437,11 +435,19 @@ impl SdkDriveAppFacadePageContentPort {
         _tenant_id: &str,
         drive_version_id: &str,
     ) -> Result<sdkwork_drive_app_sdk_generated_rust::FileVersion, CanvasProductError> {
-        self.client
+        let response = self
+            .client
             .drive()
-            .versions_get(node_id, drive_version_id)
+            .versions_list(node_id, Some(100), None)
             .await
-            .map_err(map_drive_error("get Drive file version"))
+            .map_err(map_drive_error("list Drive file versions"))?;
+        response
+            .items
+            .into_iter()
+            .find(|version| version.id == drive_version_id)
+            .ok_or_else(|| {
+                CanvasProductError::NotFound("Drive file version not found".to_string())
+            })
     }
 
     async fn list_all_versions(
@@ -460,7 +466,8 @@ impl SdkDriveAppFacadePageContentPort {
                 .map_err(map_drive_error("list Drive file versions"))?;
             items.extend(response.items);
             page_token = response
-                .next_page_token
+                .page_info
+                .next_cursor
                 .filter(|token| !is_blank(Some(token.as_str())));
             if page_token.is_none() {
                 break;
@@ -477,7 +484,10 @@ impl SdkDriveAppFacadePageContentPort {
         let download = self
             .client
             .drive()
-            .nodes_download_urls_create(node_id, Some(900))
+            .download_urls_create(&CreateDownloadUrlRequest {
+                node_id: node_id.to_string(),
+                requested_ttl_seconds: Some(900),
+            })
             .await
             .map_err(map_drive_error("create Drive download url"))?;
         let response = self
