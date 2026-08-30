@@ -17,3 +17,6 @@ sdkwork-database-sqlx.workspace = true
 sdkwork-database-repository.workspace = true
 serde.workspace = true
 sqlx.workspace = true
+
+[dev-dependencies]
+tokio.workspace = true

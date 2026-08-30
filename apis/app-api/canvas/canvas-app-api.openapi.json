@@ -167,7 +167,19 @@
         "x-sdkwork-audit-event": "canvas.workspace.create",
         "x-sdkwork-idempotent": true,
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-api-surface": "app-api"
+        "x-sdkwork-api-surface": "app-api",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        ]
       }
     },
     "/app/v3/api/canvas/workspaces/{workspaceId}/bootstrap": {
@@ -337,6 +349,16 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/WorkspaceIdPath"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -589,6 +611,16 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/PageIdPath"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -1207,6 +1239,16 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/AiSuggestionIdPath"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -1417,7 +1459,7 @@
         "schema": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 255
+          "maxLength": 128
         }
       },
       "DriveVersionIdPath": {

@@ -226,7 +226,19 @@
         "x-sdkwork-audit-event": "canvas.open.page.create",
         "x-sdkwork-idempotent": true,
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-api-surface": "open-api"
+        "x-sdkwork-api-surface": "open-api",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        ]
       }
     },
     "/canvas/v3/api/boards/{pageId}": {
@@ -382,6 +394,16 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/PageIdPath"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
           }
         ],
         "requestBody": {
@@ -657,7 +679,19 @@
         "x-sdkwork-audit-event": "canvas.open.export.create",
         "x-sdkwork-idempotent": true,
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-api-surface": "open-api"
+        "x-sdkwork-api-surface": "open-api",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        ]
       }
     },
     "/canvas/v3/api/exports/{exportId}": {

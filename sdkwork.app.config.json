@@ -55,7 +55,7 @@
   "media": {
     "icons": {
       "primary": {
-        "id": "canvas-primary-icon",
+        "id": "sdkwork-canvas-primary-icon",
         "type": "ICON",
         "purpose": "PRIMARY",
         "url": "https://cdn.sdkwork.com/apps/sdkwork-canvas/assets/icon-1024.png",
@@ -74,12 +74,12 @@
       },
       "platform": [],
       "metadata": {
-        "generatedBy": "apps/scripts/initialize-sdkwork-app-standard-v3.mjs"
+        "generatedPlaceholder": true
       }
     },
     "screenshots": [
       {
-        "id": "canvas-web-screenshot",
+        "id": "sdkwork-canvas-web-screenshot",
         "type": "SCREENSHOT",
         "purpose": "CATALOG_SCREENSHOT",
         "url": "https://cdn.sdkwork.com/apps/sdkwork-canvas/media/web-screenshot.png",
@@ -103,7 +103,7 @@
     ],
     "previews": [
       {
-        "id": "canvas-catalog-preview",
+        "id": "sdkwork-canvas-catalog-preview",
         "type": "PREVIEW_IMAGE",
         "purpose": "CATALOG_PREVIEW",
         "url": "https://cdn.sdkwork.com/apps/sdkwork-canvas/media/preview-cover.png",
@@ -166,12 +166,16 @@
           "deviceClass": "BROWSER",
           "url": "https://cdn.sdkwork.com/apps/sdkwork-canvas/releases/latest/web-universal-cloud-browser.zip",
           "sortOrder": 0,
-          "enabled": true
+          "enabled": true,
+          "runtimeTarget": "browser",
+          "profileBinding": "fixed",
+          "targetPlatform": "web",
+          "clientArchitecture": "pc-web"
         },
         {
           "id": "web-universal-standalone-browser-zip",
           "name": "SDKWork Canvas Standalone Web Bundle",
-          "sourceType": "DIRECT_DOWNLOAD",
+          "sourceType": "BINARY_URL",
           "packageFormat": "ZIP",
           "platform": "WEB",
           "architecture": "universal",
@@ -179,9 +183,52 @@
           "deviceClass": "BROWSER",
           "url": "https://cdn.sdkwork.com/apps/sdkwork-canvas/releases/latest/web-universal-standalone-browser.zip",
           "sortOrder": 1,
-          "enabled": true
+          "enabled": true,
+          "runtimeTarget": "browser",
+          "profileBinding": "fixed",
+          "targetPlatform": "web",
+          "clientArchitecture": "pc-web"
         }
       ]
     }
+  },
+  "release": {
+    "currentVersion": "0.1.0",
+    "defaultChannel": "STABLE",
+    "latest": {
+      "STABLE": "0.1.0"
+    },
+    "notes": [
+      {
+        "version": "0.1.0",
+        "releaseChannel": "STABLE",
+        "title": "SDKWork Canvas 0.1.0",
+        "summary": "SDKWork Canvas initialized standard release.",
+        "content": "Initial SDKWork App Standard v3 manifest for SDKWork Canvas.",
+        "highlights": [
+          "SDKWork App Standard v3 configuration initialized",
+          "platform_app projection metadata standardized",
+          "Download package matrix normalized"
+        ],
+        "packageIds": [
+          "web-universal-cloud-browser-zip",
+          "web-universal-standalone-browser-zip"
+        ],
+        "publishedAt": "2026-05-07T00:00:00Z",
+        "current": true,
+        "forceUpdate": false,
+        "minSupportedVersion": "0.1.0",
+        "metadata": {}
+      }
+    ]
+  },
+  "security": {
+    "checksumRequired": false,
+    "signatureRequired": false,
+    "sbomRequired": false
+  },
+  "metadata": {
+    "deploymentConfig": "etc/sdkwork.deployment.config.json",
+    "standardOwner": "sdkwork-platform"
   }
 }

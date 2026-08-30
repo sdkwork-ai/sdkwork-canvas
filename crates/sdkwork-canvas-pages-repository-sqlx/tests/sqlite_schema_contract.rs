@@ -247,7 +247,7 @@ async fn installs_phase1_workspace_and_page_schema() {
 
 #[test]
 fn sql_repository_uses_positive_lifecycle_predicates_for_indexed_queries() {
-    let source = include_str!("../../../crates/sdkwork-canvas-pages-repository-sqlx/src/canvas_store.rs");
+    let source = include_str!("../src/canvas_store.rs");
 
     assert!(
         !source.contains("lifecycle_status != 'deleted'"),
