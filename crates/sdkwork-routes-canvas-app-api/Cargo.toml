@@ -14,6 +14,7 @@ http.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 sdkwork-canvas-pages-service.workspace = true
+sdkwork-routes-canvas-http-auth.workspace = true
 sdkwork-web-core.workspace = true
 sdkwork-web-axum.workspace = true
 sdkwork-utils-rust.workspace = true
