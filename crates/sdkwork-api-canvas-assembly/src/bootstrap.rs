@@ -5,7 +5,7 @@ use std::sync::Arc;
 use axum::Router;
 use sdkwork_canvas_pages_service::service::CanvasPagesService;
 pub use sdkwork_web_bootstrap::ApiAssemblyContribution;
-use sdkwork_web_bootstrap::{AlwaysReady, HttpRouteManifest};
+use sdkwork_web_bootstrap::{AlwaysReady, HttpRouteManifest, WebModule};
 
 /// Indivisible host-neutral API assembly contribution (web-bootstrap contract).
 pub type ApiAssembly = ApiAssemblyContribution;
@@ -48,4 +48,11 @@ where
 pub async fn assemble_api_router_from_env() -> Result<ApiAssembly, String> {
     let service = crate::service::database::assemble_canvas_service_from_env().await?;
     Ok(assemble_api_router(service))
+}
+
+/// Canonical Web Module definition for this application
+/// (API_ASSEMBLY_SPEC §4.1.1): the complete HTTP surface — every route,
+/// manifest, and OpenAPI document of this owner — as one installable module.
+pub async fn web_module() -> Result<WebModule, String> {
+    Ok(WebModule::from_contribution(assemble_api_router_from_env().await?))
 }
