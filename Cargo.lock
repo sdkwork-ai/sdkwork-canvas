@@ -2126,6 +2126,7 @@ dependencies = [
  "sdkwork-routes-canvas-http-auth",
  "sdkwork-utils-rust",
  "sdkwork-web-bootstrap",
+ "sdkwork-web-core",
  "serde_json",
  "sha2 0.10.9",
  "sqlx",
@@ -2195,6 +2196,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sqlx",
+ "tokio",
 ]
 
 [[package]]
@@ -2202,7 +2204,6 @@ name = "sdkwork-canvas-pages-service"
 version = "0.1.0"
 dependencies = [
  "async-trait",
- "sdkwork-canvas-pages-repository-sqlx",
  "sdkwork-utils-rust",
  "serde",
  "serde_json",
@@ -2247,7 +2248,6 @@ dependencies = [
  "serde_json",
  "sqlx",
  "thiserror 2.0.18",
- "tokio",
 ]
 
 [[package]]
@@ -2288,7 +2288,6 @@ dependencies = [
  "serde_json",
  "sqlx",
  "thiserror 2.0.18",
- "tokio",
  "tracing",
 ]
 

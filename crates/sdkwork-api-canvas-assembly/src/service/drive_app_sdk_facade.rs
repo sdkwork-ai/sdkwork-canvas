@@ -250,12 +250,12 @@ impl SdkDriveAppFacadePageContentPort {
                 file_fingerprint: checksum.clone(),
                 original_file_name: format!("{title}.json"),
                 content_type: content_type.to_string(),
-                content_length: body.len() as i64,
-                chunk_size_bytes: chunk_size,
+                content_length: body.len().to_string(),
+                chunk_size_bytes: chunk_size.to_string(),
                 space_id: Some(drive_space_id.to_string()),
                 parent_node_id: parent_node_id.map(str::to_string),
                 retention: None,
-                now_epoch_ms: Some(epoch_ms),
+                now_epoch_ms: Some(epoch_ms.to_string()),
                 scene: Some(CANVAS_CONTENT_SCENE.to_string()),
                 source: Some(CANVAS_CONTENT_SOURCE.to_string()),
                 share_token: None,
@@ -309,7 +309,7 @@ impl SdkDriveAppFacadePageContentPort {
                 bucket: None,
                 object_key: None,
                 idempotency_key: format!("canvas-content-{page_id}-{epoch_ms}"),
-                expires_at_epoch_ms: epoch_ms + 3_600_000,
+                expires_at_epoch_ms: (epoch_ms + 3_600_000).to_string(),
             })
             .await
             .map_err(map_drive_error("create Drive upload session"))?;
@@ -387,11 +387,11 @@ impl SdkDriveAppFacadePageContentPort {
                     1,
                     &MarkUploaderPartUploadedRequest {
                         upload_session_id: upload_session_id.to_string(),
-                        offset_bytes: 0,
-                        size_bytes: body.len() as i64,
+                        offset_bytes: "0".to_string(),
+                        size_bytes: body.len().to_string(),
                         etag: etag.clone(),
                         checksum_sha256_hex: Some(checksum.strip_prefix("sha256:").unwrap_or(checksum).to_string()),
-                        uploaded_at_epoch_ms: Some(current_epoch_ms()),
+                        uploaded_at_epoch_ms: Some(current_epoch_ms().to_string()),
                     },
                 )
                 .await
@@ -404,7 +404,7 @@ impl SdkDriveAppFacadePageContentPort {
                 &CompleteUploadSessionRequest {
                     upload_id: storage_upload_id.map(str::to_string),
                     content_type: content_type.to_string(),
-                    content_length: body.len() as i64,
+                    content_length: body.len().to_string(),
                     checksum_sha256_hex: checksum.to_string(),
                     parts: vec![CompletedUploadPart {
                         part_no: 1,
@@ -425,7 +425,7 @@ impl SdkDriveAppFacadePageContentPort {
         let versions = self.list_all_versions(node_id, _tenant_id).await?;
         versions
             .into_iter()
-            .max_by_key(|version| version.version_no)
+            .max_by_key(|version| version.version_no.parse::<i64>().unwrap_or(0))
             .ok_or_else(|| CanvasProductError::NotFound("Drive file version not found".to_string()))
     }
 
@@ -438,7 +438,7 @@ impl SdkDriveAppFacadePageContentPort {
         let response = self
             .client
             .drive()
-            .versions_list(node_id, Some(100), None)
+            .versions_list(node_id, Some("100"), None)
             .await
             .map_err(map_drive_error("list Drive file versions"))?;
         response
@@ -461,7 +461,7 @@ impl SdkDriveAppFacadePageContentPort {
             let response = self
                 .client
                 .drive()
-                .versions_list(node_id, Some(100), page_token.as_deref())
+                .versions_list(node_id, Some("100"), page_token.as_deref())
                 .await
                 .map_err(map_drive_error("list Drive file versions"))?;
             items.extend(response.items);
@@ -551,7 +551,7 @@ fn snapshot_from_version_and_content(
         drive_node_id: drive_node_id.to_string(),
         drive_uri: drive_uri(drive_space_id, drive_node_id),
         drive_version_id: version.id.clone(),
-        drive_version_no: version.version_no,
+        drive_version_no: version.version_no.parse::<i64>().unwrap_or(0),
         content_type: content_type.to_string(),
         content_schema_version: content_schema_version.to_string(),
         content_hash: Some(version.checksum_sha256_hex.clone()),
@@ -567,8 +567,8 @@ fn map_file_version_summary(
 ) -> DriveVersionSummary {
     DriveVersionSummary {
         drive_version_id: version.id.clone(),
-        drive_version_no: version.version_no,
-        version_kind: if version.version_no <= 1 {
+        drive_version_no: version.version_no.parse::<i64>().unwrap_or(0),
+        version_kind: if version.version_no.parse::<i64>().unwrap_or(0) <= 1 {
             "initial".to_string()
         } else {
             "auto".to_string()

@@ -39,7 +39,8 @@
     "migrations": "migrations",
     "seeds": "seeds",
     "baseline": "ddl/baseline",
-    "drift": "drift"
+    "drift": "drift",
+    "driftPolicy": "drift/policy.yaml"
   },
   "databaseRole": "authoritative-server"
 }

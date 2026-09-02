@@ -10,8 +10,18 @@ use super::drive_port::CanvasApiDrivePort;
 pub async fn assemble_canvas_service_from_env(
 ) -> Result<CanvasPagesService<SqlCanvasStore, CanvasApiDrivePort>, String> {
     sqlx::any::install_default_drivers();
-    let config = DatabaseConfig::from_env("canvas")
-        .map_err(|error| format!("resolve Canvas Database config failed: {error}"))?;
+    // Canvas pages persist to client-local SQLite (ENVIRONMENT_SPEC §7.2): the
+    // SqlCanvasStore and schema installer are SQLite-only. When the deployment
+    // declares SDKWORK_DATABASE_SQLITE_URL it takes precedence over the
+    // workspace PostgreSQL profile so embedded gateway deployments can run
+    // canvas against the client-local store while every other module uses
+    // PostgreSQL; the legacy workspace resolution keeps standalone behavior.
+    let config = if sdkwork_database_config::client_local_sqlite_url_configured() {
+        DatabaseConfig::load_client_local_from_env("canvas")
+    } else {
+        DatabaseConfig::from_env("canvas")
+    }
+    .map_err(|error| format!("resolve Canvas Database config failed: {error}"))?;
     let pool = AnyPoolOptions::new()
         .max_connections(config.max_connections)
         .min_connections(config.min_connections)
