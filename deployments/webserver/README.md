@@ -38,6 +38,7 @@ effective(<profile>.<environment>) =
 | development | `server.development.toml` | 14 | `canvas-dev.sdkwork.com` | 80 |
 | test | `server.test.toml` | 14 | `canvas-test.sdkwork.com` | 80 |
 | staging | `server.staging.toml` | 14 | `canvas-staging.sdkwork.com` | 80 |
+| demo | `server.demo.toml` | 14 | `canvas-demo.sdkwork.com` | 80 |
 | production | `server.production.toml` | 14 | `canvas.sdkwork.com` | 443 ssl + 80 |
 
 Surfaces: application.public-ingress.
