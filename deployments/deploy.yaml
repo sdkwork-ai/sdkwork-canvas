@@ -28,6 +28,10 @@ profiles:
         tls: dtupay.com
         mode: web+api
         web: pc
+      - domain: canvas-test.noaper.com
+        tls: noaper.com
+        mode: web+api
+        web: pc
       - domain: canvas-test.sdkwork.cn
         tls: sdkwork.cn
         mode: web+api
@@ -38,6 +42,10 @@ profiles:
         web: pc
       - domain: canvas-test.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: pc
+      - domain: canvas-test.noaper.cn
+        tls: noaper.cn
         mode: web+api
         web: pc
       - domain: canvas-test.skubc.com
@@ -107,6 +115,10 @@ profiles:
         tls: dtupay.com
         mode: web+api
         web: pc
+      - domain: canvas-staging.noaper.com
+        tls: noaper.com
+        mode: web+api
+        web: pc
       - domain: canvas-staging.sdkwork.cn
         tls: sdkwork.cn
         mode: web+api
@@ -117,6 +129,10 @@ profiles:
         web: pc
       - domain: canvas-staging.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: pc
+      - domain: canvas-staging.noaper.cn
+        tls: noaper.cn
         mode: web+api
         web: pc
       - domain: canvas-staging.skubc.com
@@ -186,6 +202,10 @@ profiles:
         tls: dtupay.com
         mode: web+api
         web: pc
+      - domain: canvas.noaper.com
+        tls: noaper.com
+        mode: web+api
+        web: pc
       - domain: canvas.sdkwork.cn
         tls: sdkwork.cn
         mode: web+api
@@ -196,6 +216,10 @@ profiles:
         web: pc
       - domain: canvas.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: pc
+      - domain: canvas.noaper.cn
+        tls: noaper.cn
         mode: web+api
         web: pc
       - domain: canvas.skubc.com
@@ -268,6 +292,11 @@ profiles:
         mode: web+api
         web: pc
         apiPathStyle: full-prefix
+      - domain: canvas.noaper.com
+        tls: noaper.com
+        mode: web+api
+        web: pc
+        apiPathStyle: full-prefix
       - domain: canvas.sdkwork.cn
         tls: sdkwork.cn
         mode: web+api
@@ -280,6 +309,11 @@ profiles:
         apiPathStyle: full-prefix
       - domain: canvas.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: pc
+        apiPathStyle: full-prefix
+      - domain: canvas.noaper.cn
+        tls: noaper.cn
         mode: web+api
         web: pc
         apiPathStyle: full-prefix
