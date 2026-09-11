@@ -1,8 +1,12 @@
 [package]
+rust-version.workspace = true
 name = "sdkwork-routes-canvas-backend-api"
 version.workspace = true
 edition.workspace = true
 
+
+[lints]
+workspace = true
 [lib]
 name = "sdkwork_routes_canvas_backend_api"
 path = "src/lib.rs"
