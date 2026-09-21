@@ -1,5 +1,6 @@
 packages:
   - "apps/*"
+  - "apps/*/packages/*"
   - "sdks/*"
   - "tools/*"
   - "../sdkwork-iam/apps/sdkwork-iam-common/packages/sdkwork-iam-contracts"
