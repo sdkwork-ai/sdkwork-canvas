@@ -306,6 +306,10 @@ impl SdkDriveAppFacadePageContentPort {
                 session_id,
                 space_id: drive_space_id.to_string(),
                 node_id: drive_node_id.to_string(),
+                // CANVAS_CONTENT_SCENE uploads keep the Drive binding resolution order
+                // (bucket -> space -> space-type -> tenant); the contract field is
+                // optional and an omitted preference is the previous behaviour.
+                storage_provider_id: None,
                 bucket: None,
                 object_key: None,
                 idempotency_key: format!("canvas-content-{page_id}-{epoch_ms}"),
