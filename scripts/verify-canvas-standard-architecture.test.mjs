@@ -25,10 +25,10 @@ test('declares SDKWork standard root directories', () => {
 });
 
 test('declares workspace agent entrypoints and packaging workflow', () => {
-  for (const file of ['AGENTS.md', 'README.md', 'Cargo.toml', 'sdkwork.workflow.json', '.github/workflows/package.yml']) {
+  for (const file of ['AGENTS.md', 'README.md', 'Cargo.toml', 'agent.workflow.json', '.github/workflows/package.yml']) {
     assert.equal(exists(file), true, `${file} must exist`);
   }
-  const workflow = readJson('sdkwork.workflow.json');
+  const workflow = readJson('agent.workflow.json');
   assert.equal(workflow.app.id, 'sdkwork-canvas');
   assert.equal(workflow.app.configPath, 'agent.app.config.json');
 });
@@ -78,7 +78,7 @@ test('PC application root under apps/sdkwork-canvas-pc', () => {
   assert.equal(exists(`${PC_ROOT}/agent.app.config.json`), true);
   assert.equal(exists(`${PC_ROOT}/AGENTS.md`), true);
   const manifest = readJson(`${PC_ROOT}/agent.app.config.json`);
-  assert.equal(manifest.kind, 'sdkwork.app.surface');
+  assert.equal(manifest.kind, 'agent.app');
 });
 
 test('declares SDKWORK_DEPLOY_SPEC deployments/deploy.yaml', () => {
