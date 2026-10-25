@@ -195,7 +195,7 @@
         }
       ],
       "bootstrapAccessTokenScope": {
-        "inheritFrom": "sdkwork.app.config.json#backend.accessTokenPermissionScope",
+        "inheritFrom": "agent.app.config.json#backend.accessTokenPermissionScope",
         "supplement": [],
         "overrideReplace": false
       },
@@ -215,7 +215,7 @@
     "events": [],
     "configKeys": [
       "package.json#exports",
-      "sdkwork.app.config.json#composition",
+      "agent.app.config.json#composition",
       "config/browser/runtime-env.development.example.json"
     ]
   },

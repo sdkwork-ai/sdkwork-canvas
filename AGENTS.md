@@ -22,7 +22,7 @@ Do not copy root standard text into this repository. If these relative paths do 
 
 ## Application Identity
 
-Read `sdkwork.app.config.json` only when changing Canvas application behavior, runtime config, SDK wiring, release metadata, packaging, app-owned capabilities, or deployment metadata.
+Read `agent.app.config.json` only when changing Canvas application behavior, runtime config, SDK wiring, release metadata, packaging, app-owned capabilities, or deployment metadata.
 
 Application code: `canvas`. Domain: `canvas`. SDKWork Canvas is an AI-native visual workspace; durable bytes are Drive-backed, metadata and governance live in Canvas APIs.
 
@@ -44,7 +44,7 @@ Application code: `canvas`. Domain: `canvas`. SDKWork Canvas is an AI-native vis
 
 - `AGENTS.md`: repository agent entrypoint and relative SDKWork spec index.
 - `CLAUDE.md`, `GEMINI.md`, `CODEX.md`: compatibility shims that point to `AGENTS.md` and must not duplicate rules.
-- `sdkwork.app.config.json`: Canvas application identity, runtime, release, and capability metadata.
+- `agent.app.config.json`: Canvas application identity, runtime, release, and capability metadata.
 - `sdkwork.workflow.json`: GitHub packaging/release workflow manifest governed by `GITHUB_WORKFLOW_SPEC.md`.
 - `.github/workflows/package.yml`: thin reusable workflow call only.
 - `.sdkwork/`: local skills, plugins, manifests, and AI workspace metadata.
@@ -67,7 +67,7 @@ Application code: `canvas`. Domain: `canvas`. SDKWork Canvas is an AI-native vis
 Use dynamic progressive loading:
 
 1. Read this `AGENTS.md` and any nearer component-level `AGENTS.md`.
-2. Read `sdkwork.app.config.json` only when app identity, runtime config, SDK wiring, release, packaging, or owned capabilities are touched.
+2. Read `agent.app.config.json` only when app identity, runtime config, SDK wiring, release, packaging, or owned capabilities are touched.
 3. Read local `specs/README.md` and `specs/component.spec.json` only when local contracts are relevant.
 4. Read local `.sdkwork/README.md`, `.sdkwork/skills/`, and `.sdkwork/plugins/` only when local agent extensions are relevant.
 5. Read `../sdkwork-specs/README.md`, then only the task-specific root specs.

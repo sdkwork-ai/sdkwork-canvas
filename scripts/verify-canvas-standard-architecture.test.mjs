@@ -30,7 +30,7 @@ test('declares workspace agent entrypoints and packaging workflow', () => {
   }
   const workflow = readJson('sdkwork.workflow.json');
   assert.equal(workflow.app.id, 'sdkwork-canvas');
-  assert.equal(workflow.app.configPath, 'sdkwork.app.config.json');
+  assert.equal(workflow.app.configPath, 'agent.app.config.json');
 });
 
 test('declares Canvas OpenAPI authorities', () => {
@@ -75,9 +75,9 @@ test('does not declare sdkwork-discovery without RPC services', () => {
 });
 
 test('PC application root under apps/sdkwork-canvas-pc', () => {
-  assert.equal(exists(`${PC_ROOT}/sdkwork.app.config.json`), true);
+  assert.equal(exists(`${PC_ROOT}/agent.app.config.json`), true);
   assert.equal(exists(`${PC_ROOT}/AGENTS.md`), true);
-  const manifest = readJson(`${PC_ROOT}/sdkwork.app.config.json`);
+  const manifest = readJson(`${PC_ROOT}/agent.app.config.json`);
   assert.equal(manifest.kind, 'sdkwork.app.surface');
 });
 

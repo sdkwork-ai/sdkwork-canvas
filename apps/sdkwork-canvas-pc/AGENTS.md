@@ -24,14 +24,14 @@ Do not copy root standard text into this application root. If these relative pat
 
 ## Application Identity
 
-This is the PC browser application root for SDKWork Canvas (`apps/sdkwork-canvas-pc/`). The parent repository `sdkwork-canvas` owns the application identity, backend services, API contracts, and SDK generation. Read `../../sdkwork.app.config.json` for application identity, runtime config, SDK wiring, release metadata, or app-owned capabilities.
+This is the PC browser application root for SDKWork Canvas (`apps/sdkwork-canvas-pc/`). The parent repository `sdkwork-canvas` owns the application identity, backend services, API contracts, and SDK generation. Read `../../agent.app.config.json` for application identity, runtime config, SDK wiring, release metadata, or app-owned capabilities.
 
 Application code: `canvas`. Domain: `canvas`.
 
 ## Local Dictionary Structure
 
 - `AGENTS.md`: PC application agent entrypoint and relative SDKWork spec index.
-- `sdkwork.app.config.json`: PC application-level composition config (references parent `../../sdkwork.app.config.json` as root config).
+- `agent.app.config.json`: PC application-level composition config (references parent `../../agent.app.config.json` as root config).
 - `specs/`: local PC application contracts and narrowing rules.
 - `src/`: React + TypeScript source code.
 - `config/browser/`: browser runtime environment config templates.
@@ -41,7 +41,7 @@ Application code: `canvas`. Domain: `canvas`.
 
 1. Read this `AGENTS.md`.
 2. Read `../../AGENTS.md` for repository-level rules.
-3. Read `../../sdkwork.app.config.json` only when app identity, runtime config, SDK wiring, release, packaging, or owned capabilities are touched.
+3. Read `../../agent.app.config.json` only when app identity, runtime config, SDK wiring, release, packaging, or owned capabilities are touched.
 4. Read local `specs/README.md` only when local contracts are relevant.
 5. Read `../../../sdkwork-specs/README.md`, then only the task-specific root specs.
 6. Inspect implementation files after the dictionary and relevant specs are clear.

@@ -6,7 +6,7 @@
     "name": "SDKWork Canvas",
     "repository": "sdkwork-ai/sdkwork-canvas",
     "sourcePath": ".",
-    "configPath": "sdkwork.app.config.json"
+    "configPath": "agent.app.config.json"
   },
   "release": {
     "artifactPrefix": "sdkwork-canvas",
