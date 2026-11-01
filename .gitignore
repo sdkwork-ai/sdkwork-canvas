@@ -21,10 +21,10 @@ target/
 .env.*
 !.env.example
 !.env.*.example
-!.env.postgres.example
+!config/host/postgres.env.example
 .env.local
 .env.*.local
-.env.postgres
+config/host/postgres.env
 .env.release.local
 config/*.local.toml
 
