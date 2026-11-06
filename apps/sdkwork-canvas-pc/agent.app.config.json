@@ -12,7 +12,14 @@
     "officialWebsiteUrl": "https://sdkwork.com/apps/sdkwork-canvas",
     "appType": "APP_HTML"
   },
-  "backend": {},
+  "backend": {
+    "appId": "sdkwork-canvas-pc",
+    "tenantId": "100001",
+    "organizationId": "0",
+    "accessTokenPermissionScope": [
+      "iam:self"
+    ]
+  },
   "runtime": {
     "family": "web",
     "runtimes": [
