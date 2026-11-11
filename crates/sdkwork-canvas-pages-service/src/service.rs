@@ -1,20 +1,20 @@
 use crate::domain::{
     AcceptAiSuggestionCommand, AiFeedback, AiFeedbackPage, AiJob, AiJobPage, AiJobSource,
-    AiSuggestion, AiSuggestionPage, ApplyAiSuggestionCommand, ClaimAiJobCommand,
-    CompleteAiJobCommand, CreateAiFeedbackCommand, CreateAiJobCommand, CreatePageCommand,
-    CreateWorkspaceCommand, DriveVersionPage, FailAiJobCommand, ListAiJobsQuery, ListAiSuggestionFeedbackQuery,
-    ListPageAiSuggestionsQuery, NewAiFeedback, NewAiJob, NewAiJobSource, NewAiSuggestion, NewPage,
-    NewWorkspace, CanvasActorContext, Page, PageContent, PageInfo, PageKind, PageMetadataPatch, PageSummary,
-    PageSummaryPage, RejectAiSuggestionCommand, RemoteApplyConflict, RemoteApplyMutation,
-    RemoteApplyPageCommand, RemoteApplyPageResult, RestorePageVersionCommand, SearchResult,
-    SearchResultPage, UpdatePageContentCommand, UpdatePageMetadataCommand, Workspace,
-    WorkspaceBootstrap, WorkspacePage,
+    AiSuggestion, AiSuggestionPage, ApplyAiSuggestionCommand, CanvasActorContext,
+    ClaimAiJobCommand, CompleteAiJobCommand, CreateAiFeedbackCommand, CreateAiJobCommand,
+    CreatePageCommand, CreateWorkspaceCommand, DriveVersionPage, FailAiJobCommand, ListAiJobsQuery,
+    ListAiSuggestionFeedbackQuery, ListPageAiSuggestionsQuery, NewAiFeedback, NewAiJob,
+    NewAiJobSource, NewAiSuggestion, NewPage, NewWorkspace, Page, PageContent, PageInfo, PageKind,
+    PageMetadataPatch, PageSummary, PageSummaryPage, RejectAiSuggestionCommand,
+    RemoteApplyConflict, RemoteApplyMutation, RemoteApplyPageCommand, RemoteApplyPageResult,
+    RestorePageVersionCommand, SearchResult, SearchResultPage, UpdatePageContentCommand,
+    UpdatePageMetadataCommand, Workspace, WorkspaceBootstrap, WorkspacePage,
 };
 use crate::error::CanvasProductError;
 use crate::ports::{
-    CreateDrivePageContentCommand, DrivePageContentPort, ListDrivePageContentVersionsCommand,
-    CanvasRepository, ReadDrivePageContentCommand, RestoreDrivePageContentVersionCommand,
-    UpdateDrivePageContentCommand,
+    CanvasRepository, CreateDrivePageContentCommand, DrivePageContentPort,
+    ListDrivePageContentVersionsCommand, ReadDrivePageContentCommand,
+    RestoreDrivePageContentVersionCommand, UpdateDrivePageContentCommand,
 };
 use sdkwork_utils_rust::string::{is_blank, trim};
 
@@ -87,7 +87,10 @@ where
             .await
     }
 
-    pub async fn create_page(&self, command: CreatePageCommand) -> Result<Page, CanvasProductError> {
+    pub async fn create_page(
+        &self,
+        command: CreatePageCommand,
+    ) -> Result<Page, CanvasProductError> {
         let context = normalize_actor_context(command.context)?;
         let page_id = normalize_required_string("page id", &command.id)?;
         let title = normalize_required_string("page title", &command.title)?;
@@ -380,7 +383,8 @@ where
     ) -> Result<RemoteApplyPageResult, CanvasProductError> {
         let context = normalize_actor_context(command.context)?;
         let page_id = normalize_required_string("page id", &command.page_id)?;
-        let idempotency_key = normalize_required_string("idempotencyKey", &command.idempotency_key)?;
+        let idempotency_key =
+            normalize_required_string("idempotencyKey", &command.idempotency_key)?;
         let task_id = normalize_required_string("taskId", &command.task_id)?;
         let entity_type = normalize_required_string("entityType", &command.entity_type)?;
         let entity_id = normalize_required_string("entityId", &command.entity_id)?;
@@ -437,7 +441,11 @@ where
                     ));
                 };
 
-                if title.is_some() || is_favorite.is_some() || publish_status.is_some() || parent_id.is_some() {
+                if title.is_some()
+                    || is_favorite.is_some()
+                    || publish_status.is_some()
+                    || parent_id.is_some()
+                {
                     self.update_page_metadata(UpdatePageMetadataCommand {
                         context: context.clone(),
                         page_id: page_id.clone(),
@@ -665,6 +673,7 @@ where
             .read_page_content(ReadDrivePageContentCommand {
                 tenant_id: context.tenant_id.clone(),
                 organization_id: context.organization_id.clone(),
+                operator_id: context.operator_id.clone(),
                 page_id: page.id.clone(),
                 drive_space_id: page.drive_space_id.clone(),
                 drive_node_id: page.drive_node_id.clone(),
@@ -719,6 +728,7 @@ where
             .list_page_content_versions(ListDrivePageContentVersionsCommand {
                 tenant_id: context.tenant_id,
                 organization_id: context.organization_id,
+                operator_id: context.operator_id,
                 page_id: page.id,
                 drive_space_id: page.drive_space_id,
                 drive_node_id: page.drive_node_id,
@@ -853,11 +863,13 @@ where
         let target_type = normalize_ai_target_type(&command.target_type)?;
         let target_id = command
             .target_id
-            .as_ref().map(|value| trim(value))
+            .as_ref()
+            .map(|value| trim(value))
             .filter(|value| !value.is_empty());
         let prompt_snapshot = command
             .prompt
-            .as_ref().map(|value| trim(value))
+            .as_ref()
+            .map(|value| trim(value))
             .filter(|value| !value.is_empty());
         if prompt_snapshot
             .as_ref()
@@ -1026,7 +1038,8 @@ where
             }
             let page_id = suggestion
                 .page_id
-                .as_ref().map(|value| trim(value))
+                .as_ref()
+                .map(|value| trim(value))
                 .filter(|value| !value.is_empty())
                 .or_else(|| page_id_from_ai_job(&job, &sources))
                 .ok_or_else(|| {
@@ -1078,7 +1091,10 @@ where
             .await
     }
 
-    pub async fn fail_ai_job(&self, command: FailAiJobCommand) -> Result<AiJob, CanvasProductError> {
+    pub async fn fail_ai_job(
+        &self,
+        command: FailAiJobCommand,
+    ) -> Result<AiJob, CanvasProductError> {
         let context = normalize_actor_context(command.context)?;
         let ai_job_id = normalize_required_string("AI job id", &command.ai_job_id)?;
         let error_code = normalize_required_string("error code", &command.error_code)?;
@@ -1301,7 +1317,8 @@ where
         let feedback_type = normalize_ai_feedback_type(&command.feedback_type)?;
         let feedback_text = command
             .feedback_text
-            .as_ref().map(|value| trim(value))
+            .as_ref()
+            .map(|value| trim(value))
             .filter(|value| !value.is_empty());
         if feedback_text
             .as_ref()
@@ -1540,7 +1557,11 @@ fn normalize_optional_query<'a>(
     Ok(value)
 }
 
-fn validate_max_chars(field: &str, value: &str, max_chars: usize) -> Result<(), CanvasProductError> {
+fn validate_max_chars(
+    field: &str,
+    value: &str,
+    max_chars: usize,
+) -> Result<(), CanvasProductError> {
     if value.chars().count() > max_chars {
         return Err(CanvasProductError::Validation(format!(
             "{field} must be at most {max_chars} characters"
@@ -1639,7 +1660,10 @@ fn optional_payload_string(
     Ok(Some(value))
 }
 
-fn validate_ai_target(target_type: &str, target_id: Option<&str>) -> Result<(), CanvasProductError> {
+fn validate_ai_target(
+    target_type: &str,
+    target_id: Option<&str>,
+) -> Result<(), CanvasProductError> {
     match target_type {
         "page" | "collection" if target_id.is_none() => Err(CanvasProductError::Validation(
             "targetId is required for this targetType".to_string(),

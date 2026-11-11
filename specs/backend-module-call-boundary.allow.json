@@ -1,0 +1,10 @@
+{
+  "allow": [
+    {
+      "file": "crates/sdkwork-api-canvas-assembly/src/service/drive_http_adapter.rs",
+      "envVar": "SDKWORK_DRIVE_FACADE_URL",
+      "module": "drive",
+      "reason": "Explicit split-deployment opt-in only (MODULE_SPEC.md §4.2.3). Canvas calls sdkwork-drive in-process by default through sdkwork-drive-workspace-service on the host PgPool; every page-content operation (create, update via DriveUploadService::complete_stored_version, restore via SqlDriveNodeVersionStore::restore_version, read, version list) has an in-process call. This adapter is unreachable unless the deployment sets SDKWORK_CANVAS_DRIVE_MODE=http, and the endpoint it reads is validated at startup, so a real split deployment keeps working."
+    }
+  ]
+}

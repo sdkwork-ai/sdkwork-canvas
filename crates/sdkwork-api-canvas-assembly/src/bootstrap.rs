@@ -54,5 +54,7 @@ pub async fn assemble_api_router_from_env() -> Result<ApiAssembly, String> {
 /// (API_ASSEMBLY_SPEC §4.1.1): the complete HTTP surface — every route,
 /// manifest, and OpenAPI document of this owner — as one installable module.
 pub async fn web_module() -> Result<WebModule, String> {
-    Ok(WebModule::from_contribution(assemble_api_router_from_env().await?))
+    Ok(WebModule::from_contribution(
+        assemble_api_router_from_env().await?,
+    ))
 }

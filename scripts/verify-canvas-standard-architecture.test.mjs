@@ -101,6 +101,6 @@ test('database module id is canvas', () => {
 });
 
 test('integrates sdkwork-drive in standalone gateway bootstrap', () => {
-  const facade = read('crates/sdkwork-api-canvas-standalone-gateway/src/bootstrap/drive_app_sdk_facade.rs');
+  const facade = read('crates/sdkwork-api-canvas-assembly/src/service/drive_http_adapter.rs');
   assert.match(facade, /sdkwork_drive_app_sdk_generated_rust/);
 });

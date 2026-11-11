@@ -1,6 +1,6 @@
 use crate::domain::{
-    AiFeedback, AiJob, AiJobSource, AiSuggestion, DrivePageContentSnapshot, DriveVersionPage,
-    NewAiFeedback, NewAiJob, NewAiSuggestion, NewPage, NewWorkspace, CanvasActorContext, Page,
+    AiFeedback, AiJob, AiJobSource, AiSuggestion, CanvasActorContext, DrivePageContentSnapshot,
+    DriveVersionPage, NewAiFeedback, NewAiJob, NewAiSuggestion, NewPage, NewWorkspace, Page,
     PageMetadataPatch, Workspace,
 };
 use crate::error::CanvasProductError;
@@ -257,6 +257,10 @@ pub struct UpdateDrivePageContentCommand {
 pub struct ReadDrivePageContentCommand {
     pub tenant_id: String,
     pub organization_id: String,
+    /// The Canvas operator the page belongs to. Drive's version read routes
+    /// authorized that subject (`reader`); the in-process port reproduces the
+    /// same check instead of trusting the caller.
+    pub operator_id: String,
     pub page_id: String,
     pub drive_space_id: String,
     pub drive_node_id: String,
@@ -282,6 +286,9 @@ pub struct RestoreDrivePageContentVersionCommand {
 pub struct ListDrivePageContentVersionsCommand {
     pub tenant_id: String,
     pub organization_id: String,
+    /// The Canvas operator the page belongs to. Drive's version list route
+    /// authorized that subject (`reader`).
+    pub operator_id: String,
     pub page_id: String,
     pub drive_space_id: String,
     pub drive_node_id: String,

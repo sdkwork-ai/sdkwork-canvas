@@ -1,8 +1,8 @@
-use sqlx::any::AnyPoolOptions;
 use sdkwork_database_config::DatabaseConfig;
+use sqlx::any::AnyPoolOptions;
 
-use sdkwork_canvas_pages_repository_sqlx::install_sqlite_schema;
 use sdkwork_canvas_pages_repository_sqlx::canvas_store::SqlCanvasStore;
+use sdkwork_canvas_pages_repository_sqlx::install_sqlite_schema;
 use sdkwork_canvas_pages_service::service::CanvasPagesService;
 
 use super::drive_port::CanvasApiDrivePort;
@@ -35,8 +35,14 @@ pub async fn assemble_canvas_service_from_env(
         .await
         .map_err(|error| format!("install canvas schema failed: {error}"))?;
 
+    // MODULE_SPEC.md §4.2: the Drive port is resolved once, at startup, so a
+    // missing split-deployment endpoint or host pool aborts the boot instead of
+    // failing the first page request.
+    let drive_port = CanvasApiDrivePort::from_env()
+        .map_err(|error| format!("initialize Canvas Drive port failed: {error}"))?;
+
     Ok(CanvasPagesService::new(
         SqlCanvasStore::new(pool),
-        CanvasApiDrivePort::from_env(),
+        drive_port,
     ))
 }

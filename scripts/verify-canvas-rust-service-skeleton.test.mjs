@@ -306,7 +306,8 @@ test('keeps Canvas service source free of Drive-owned storage lifecycle terms', 
   ];
 
   const driveAdapterAllowlist = new Set([
-    'crates/sdkwork-api-canvas-standalone-gateway/src/bootstrap/drive_app_sdk_facade.rs',
+    'crates/sdkwork-api-canvas-assembly/src/service/drive_http_adapter.rs',
+    'crates/sdkwork-api-canvas-assembly/src/service/drive_in_process.rs',
   ]);
 
   const findings = [];
