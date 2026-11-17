@@ -1,13 +1,13 @@
 use async_trait::async_trait;
 use axum::body::{to_bytes, Body};
 use http::{Method, Request, StatusCode};
+use sdkwork_canvas_pages_repository_sqlx::canvas_store::SqlCanvasStore;
+use sdkwork_canvas_pages_repository_sqlx::install_sqlite_schema;
 use sdkwork_canvas_pages_service::domain::{
     ClaimAiJobCommand, CompleteAiJobCommand, CompleteAiSuggestionInput, CreateAiFeedbackCommand,
     CreateAiJobCommand, CreatePageCommand, CreateWorkspaceCommand, DrivePageContentSnapshot,
     DriveVersionPage, ListPageAiSuggestionsQuery, PageInfo, PageKind,
 };
-use sdkwork_canvas_pages_repository_sqlx::install_sqlite_schema;
-use sdkwork_canvas_pages_repository_sqlx::canvas_store::SqlCanvasStore;
 use sdkwork_canvas_pages_service::ports::{
     CreateDrivePageContentCommand, DrivePageContentPort, ListDrivePageContentVersionsCommand,
     ReadDrivePageContentCommand, RestoreDrivePageContentVersionCommand,
@@ -71,9 +71,7 @@ async fn backend_api_routes_list_retrieve_and_cancel_ai_jobs() {
         .oneshot(
             auth_request_builder()
                 .method(Method::GET)
-                .uri(format!(
-                    "/backend/v3/api/canvas/ai_jobs/{ai_job_id}"
-                ))
+                .uri(format!("/backend/v3/api/canvas/ai_jobs/{ai_job_id}"))
                 .body(Body::empty())
                 .expect("AI job retrieve request should be built"),
         )
@@ -89,9 +87,7 @@ async fn backend_api_routes_list_retrieve_and_cancel_ai_jobs() {
         .oneshot(
             auth_request_builder()
                 .method(Method::POST)
-                .uri(format!(
-                    "/backend/v3/api/canvas/ai_jobs/{ai_job_id}/cancel"
-                ))
+                .uri(format!("/backend/v3/api/canvas/ai_jobs/{ai_job_id}/cancel"))
                 .body(Body::empty())
                 .expect("AI job cancel request should be built"),
         )
@@ -146,9 +142,7 @@ async fn backend_api_routes_claim_and_complete_ai_jobs() {
         .oneshot(
             auth_request_builder()
                 .method(Method::POST)
-                .uri(format!(
-                    "/backend/v3/api/canvas/ai_jobs/{ai_job_id}/claim"
-                ))
+                .uri(format!("/backend/v3/api/canvas/ai_jobs/{ai_job_id}/claim"))
                 .body(Body::empty())
                 .expect("AI job claim request should be built"),
         )
@@ -218,8 +212,7 @@ async fn backend_api_routes_accept_and_reject_ai_suggestions() {
         .oneshot(json_request(
             Method::POST,
             &format!("/backend/v3/api/canvas/ai_suggestions/{summary_id}/accept"),
-            json!({
-            }),
+            json!({}),
         ))
         .await
         .expect("AI suggestion accept request should be handled");
@@ -233,8 +226,7 @@ async fn backend_api_routes_accept_and_reject_ai_suggestions() {
         .oneshot(json_request(
             Method::POST,
             &format!("/backend/v3/api/canvas/ai_suggestions/{tag_id}/reject"),
-            json!({
-            }),
+            json!({}),
         ))
         .await
         .expect("AI suggestion reject request should be handled");
@@ -247,8 +239,7 @@ async fn backend_api_routes_accept_and_reject_ai_suggestions() {
         .oneshot(json_request(
             Method::POST,
             &format!("/backend/v3/api/canvas/ai_suggestions/{summary_id}/reject"),
-            json!({
-            }),
+            json!({}),
         ))
         .await
         .expect("conflicting AI suggestion reject request should be handled");
@@ -279,8 +270,7 @@ async fn backend_api_routes_apply_accepted_ai_suggestion() {
         .oneshot(json_request(
             Method::POST,
             &format!("/backend/v3/api/canvas/ai_suggestions/{summary_id}/accept"),
-            json!({
-            }),
+            json!({}),
         ))
         .await
         .expect("AI suggestion accept request should be handled");
@@ -332,6 +322,7 @@ async fn backend_api_routes_list_ai_suggestion_feedback() {
                 tenant_id: "100001".to_string(),
                 organization_id: "0".to_string(),
                 operator_id: "30".to_string(),
+                caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
             },
             ai_suggestion_id: summary_id.clone(),
             feedback_type: "helpful".to_string(),
@@ -370,6 +361,7 @@ async fn seed_ai_job(service: &CanvasPagesService<SqlCanvasStore, FakeDrivePageC
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
     let workspace = service
         .create_workspace(CreateWorkspaceCommand {
@@ -424,6 +416,7 @@ async fn seed_ai_suggestions(
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
     let workspace = service
         .create_workspace(CreateWorkspaceCommand {
@@ -529,6 +522,7 @@ async fn seed_applicable_ai_suggestion(
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
     let workspace = service
         .create_workspace(CreateWorkspaceCommand {
@@ -668,7 +662,8 @@ impl DrivePageContentPort for FakeDrivePageContentPort {
     async fn create_page_content(
         &self,
         command: CreateDrivePageContentCommand,
-    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError> {
+    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError>
+    {
         let snapshot = DrivePageContentSnapshot {
             drive_space_id: command.drive_space_id.clone(),
             drive_node_id: format!("drive-node-{}", command.page_id),
@@ -696,7 +691,8 @@ impl DrivePageContentPort for FakeDrivePageContentPort {
     async fn update_page_content(
         &self,
         command: UpdateDrivePageContentCommand,
-    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError> {
+    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError>
+    {
         let snapshot = DrivePageContentSnapshot {
             drive_space_id: command.drive_space_id,
             drive_node_id: command.drive_node_id,
@@ -721,7 +717,8 @@ impl DrivePageContentPort for FakeDrivePageContentPort {
     async fn read_page_content(
         &self,
         command: ReadDrivePageContentCommand,
-    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError> {
+    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError>
+    {
         self.records
             .lock()
             .await
@@ -737,7 +734,8 @@ impl DrivePageContentPort for FakeDrivePageContentPort {
     async fn restore_page_content_version(
         &self,
         _: RestoreDrivePageContentVersionCommand,
-    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError> {
+    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError>
+    {
         unreachable!("backend AI routes must not restore Drive page content versions")
     }
 

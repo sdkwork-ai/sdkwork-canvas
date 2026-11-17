@@ -1,22 +1,22 @@
 use async_trait::async_trait;
+use sdkwork_canvas_pages_repository_sqlx::canvas_store::SqlCanvasStore;
+use sdkwork_canvas_pages_repository_sqlx::install_sqlite_schema;
 use sdkwork_canvas_pages_service::domain::{
     AcceptAiSuggestionCommand, AiFeedback, AiJob, AiJobSource, AiSuggestion,
-    ApplyAiSuggestionCommand, ClaimAiJobCommand, CompleteAiJobCommand, CompleteAiSuggestionInput,
-    CreateAiFeedbackCommand, CreateAiJobCommand, CreatePageCommand, CreateWorkspaceCommand,
-    DrivePageContentSnapshot, DriveVersionPage, DriveVersionSummary, ListAiJobsQuery,
-    ListAiSuggestionFeedbackQuery, ListPageAiSuggestionsQuery, ListPageVersionsQuery,
-    ListPagesQuery, ListWorkspacesQuery, NewAiFeedback, NewAiJob, NewAiSuggestion, NewPage,
-    NewWorkspace, CanvasActorContext, Page, PageInfo, PageKind, PageMetadataPatch,
+    ApplyAiSuggestionCommand, CanvasActorContext, ClaimAiJobCommand, CompleteAiJobCommand,
+    CompleteAiSuggestionInput, CreateAiFeedbackCommand, CreateAiJobCommand, CreatePageCommand,
+    CreateWorkspaceCommand, DrivePageContentSnapshot, DriveVersionPage, DriveVersionSummary,
+    ListAiJobsQuery, ListAiSuggestionFeedbackQuery, ListPageAiSuggestionsQuery,
+    ListPageVersionsQuery, ListPagesQuery, ListWorkspacesQuery, NewAiFeedback, NewAiJob,
+    NewAiSuggestion, NewPage, NewWorkspace, Page, PageInfo, PageKind, PageMetadataPatch,
     RejectAiSuggestionCommand, RestorePageVersionCommand, SearchQuery, UpdatePageContentCommand,
     UpdatePageMetadataCommand, Workspace,
 };
 use sdkwork_canvas_pages_service::error::CanvasProductError;
-use sdkwork_canvas_pages_repository_sqlx::install_sqlite_schema;
-use sdkwork_canvas_pages_repository_sqlx::canvas_store::SqlCanvasStore;
 use sdkwork_canvas_pages_service::ports::{
-    CreateDrivePageContentCommand, DrivePageContentPort, ListDrivePageContentVersionsCommand,
-    CanvasRepository, ReadDrivePageContentCommand, RestoreDrivePageContentVersionCommand,
-    UpdateDrivePageContentCommand,
+    CanvasRepository, CreateDrivePageContentCommand, DrivePageContentPort,
+    ListDrivePageContentVersionsCommand, ReadDrivePageContentCommand,
+    RestoreDrivePageContentVersionCommand, UpdateDrivePageContentCommand,
 };
 use sdkwork_canvas_pages_service::service::CanvasPagesService;
 use serde_json::json;
@@ -45,6 +45,7 @@ async fn page_content_lifecycle_stores_drive_refs_and_updates_current_version() 
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -145,11 +146,13 @@ async fn page_workflows_normalize_context_and_resource_ids_before_repository_and
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
     let padded_actor = CanvasActorContext {
         tenant_id: " 100001 ".to_string(),
         organization_id: " 0 ".to_string(),
         operator_id: " 30 ".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -280,6 +283,7 @@ async fn update_page_content_validates_payload_before_drive_content_is_written()
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -352,6 +356,7 @@ async fn update_page_content_rejects_oversized_content_metadata_before_drive_con
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -443,6 +448,7 @@ async fn create_page_rejects_invalid_drive_snapshot_before_canvas_page_is_persis
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -477,11 +483,12 @@ async fn create_page_rejects_invalid_drive_snapshot_before_canvas_page_is_persis
         })
         .await;
     assert!(matches!(result, Err(CanvasProductError::Internal(_))));
-    let page_count: i64 =
-        sqlx::query_scalar("SELECT COUNT(1) FROM canvas_page WHERE id='page-invalid-drive-version'")
-            .fetch_one(&pool)
-            .await
-            .expect("canvas_page count should be readable");
+    let page_count: i64 = sqlx::query_scalar(
+        "SELECT COUNT(1) FROM canvas_page WHERE id='page-invalid-drive-version'",
+    )
+    .fetch_one(&pool)
+    .await
+    .expect("canvas_page count should be readable");
     assert_eq!(page_count, 0);
 }
 
@@ -504,6 +511,7 @@ async fn create_page_rejects_drive_snapshot_with_unexpected_content_metadata_bef
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -552,14 +560,15 @@ async fn create_page_rejects_drive_snapshot_with_unexpected_content_metadata_bef
 }
 
 #[tokio::test]
-async fn create_page_reports_reconciliation_when_canvas_insert_fails_after_drive_content_is_created()
-{
+async fn create_page_reports_reconciliation_when_canvas_insert_fails_after_drive_content_is_created(
+) {
     let drive = FakeDrivePageContentPort::default();
     let service = CanvasPagesService::new(ConcurrentPageInsertRepository, drive.clone());
     let actor = CanvasActorContext {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let result = service
@@ -600,6 +609,7 @@ async fn update_page_content_rejects_invalid_drive_snapshot_before_canvas_page_i
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -682,6 +692,7 @@ async fn update_page_content_rejects_drive_snapshot_with_unexpected_content_meta
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -770,6 +781,7 @@ async fn update_page_content_rejects_drive_snapshot_that_does_not_advance_versio
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -837,7 +849,8 @@ async fn update_page_content_rejects_drive_snapshot_that_does_not_advance_versio
 }
 
 #[tokio::test]
-async fn update_page_content_rejects_drive_snapshot_for_wrong_node_before_canvas_page_is_advanced() {
+async fn update_page_content_rejects_drive_snapshot_for_wrong_node_before_canvas_page_is_advanced()
+{
     sqlx::any::install_default_drivers();
     let pool = AnyPoolOptions::new()
         .max_connections(1)
@@ -854,6 +867,7 @@ async fn update_page_content_rejects_drive_snapshot_for_wrong_node_before_canvas
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -936,6 +950,7 @@ async fn update_page_content_rejects_non_object_drive_content_before_canvas_page
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -1019,6 +1034,7 @@ async fn get_page_content_rejects_drive_snapshot_that_does_not_match_current_can
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -1078,6 +1094,7 @@ async fn update_page_content_preserves_existing_content_metadata_when_request_om
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -1160,6 +1177,7 @@ async fn update_page_content_defaults_drive_expected_version_to_current_canvas_p
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -1236,6 +1254,7 @@ async fn update_page_content_rejects_stale_expected_drive_version_before_drive_w
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -1321,6 +1340,7 @@ async fn create_page_rejects_duplicate_page_id_before_drive_content_is_written()
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -1395,11 +1415,13 @@ async fn create_page_rejects_globally_reserved_page_id_before_drive_content_is_w
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
     let second_actor = CanvasActorContext {
         tenant_id: "100002".to_string(),
         organization_id: "300002".to_string(),
         operator_id: "user-002".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -1492,6 +1514,7 @@ async fn create_page_validates_metadata_before_drive_content_is_written() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -1571,6 +1594,7 @@ async fn create_page_rejects_oversized_content_metadata_before_drive_content_is_
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -1650,6 +1674,7 @@ async fn create_workspace_normalizes_and_validates_metadata_before_sql_constrain
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -1671,7 +1696,10 @@ async fn create_workspace_normalizes_and_validates_metadata_before_sql_constrain
     assert_eq!(workspace.owner_subject_type, "user");
     assert_eq!(workspace.owner_subject_id, "30");
     assert_eq!(workspace.name, "Product Lab");
-    assert_eq!(workspace.description.as_deref(), Some("AI canvas workspace"));
+    assert_eq!(
+        workspace.description.as_deref(),
+        Some("AI canvas workspace")
+    );
     assert_eq!(workspace.drive_space_id, "drive-space-trimmed");
     assert_eq!(
         workspace.default_page_content_type,
@@ -1737,6 +1765,7 @@ async fn read_models_list_bootstrap_and_update_page_metadata_without_drive_conte
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -1938,6 +1967,7 @@ async fn page_versions_are_listed_from_drive_without_canvas_revision_rows() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -2042,6 +2072,7 @@ async fn page_versions_reject_invalid_drive_version_summaries() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -2107,6 +2138,7 @@ async fn page_versions_reject_unbounded_drive_version_pages() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -2172,6 +2204,7 @@ async fn page_versions_reject_drive_page_info_mismatches() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -2237,6 +2270,7 @@ async fn restore_page_version_creates_drive_owned_restore_version_and_advances_c
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -2343,6 +2377,7 @@ async fn restore_page_version_defaults_expected_current_drive_version_to_canvas_
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -2419,12 +2454,14 @@ async fn restore_page_version_reports_reconciliation_when_canvas_pointer_changes
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
     drive
         .create_page_content(CreateDrivePageContentCommand {
             tenant_id: actor.tenant_id.clone(),
             organization_id: actor.organization_id.clone(),
             operator_id: actor.operator_id.clone(),
+            caller: actor.caller.clone(),
             workspace_id: "workspace-001".to_string(),
             page_id: "page-001".to_string(),
             title: "Roadmap".to_string(),
@@ -2475,6 +2512,7 @@ async fn restore_page_version_rejects_drive_snapshot_that_does_not_advance_versi
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -2565,6 +2603,7 @@ async fn restore_page_version_rejects_drive_snapshot_with_oversized_content_meta
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -2654,6 +2693,7 @@ async fn update_page_metadata_rejects_when_repository_version_changed_after_serv
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let stale_result = service
@@ -2680,6 +2720,7 @@ async fn update_page_content_rejects_when_canvas_current_drive_version_changed_b
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let result = service
@@ -2717,6 +2758,7 @@ async fn search_query_returns_page_summaries_with_drive_version_provenance() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -2844,6 +2886,7 @@ async fn search_query_highlights_current_projection_snippet_when_match_comes_fro
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -2933,6 +2976,7 @@ async fn ai_job_creation_records_page_source_drive_version_provenance_and_idempo
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -3053,6 +3097,7 @@ async fn ai_job_creation_replays_existing_job_when_concurrent_idempotent_insert_
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let job = service
@@ -3084,6 +3129,7 @@ async fn page_ai_job_creation_rejects_missing_target_id_before_repository_reads(
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let result = service
@@ -3122,6 +3168,7 @@ async fn ai_job_creation_hashes_and_resolves_normalized_request_values() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -3207,11 +3254,13 @@ async fn ai_workflows_normalize_context_and_resource_ids_before_repository_and_d
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
     let padded_actor = CanvasActorContext {
         tenant_id: " 100001 ".to_string(),
         organization_id: " 0 ".to_string(),
         operator_id: " 30 ".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -3378,6 +3427,7 @@ async fn backend_ai_job_admin_lists_retrieves_and_cancels_jobs() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "admin-001".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -3484,16 +3534,19 @@ async fn ai_job_claim_is_exclusive_and_rejects_second_worker_claim() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "worker-creator".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
     let first_worker = CanvasActorContext {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "worker-001".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
     let second_worker = CanvasActorContext {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "worker-002".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -3585,6 +3638,7 @@ async fn ai_job_worker_claims_completes_and_lists_page_suggestions() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "worker-001".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -3739,6 +3793,7 @@ async fn page_target_ai_job_rejects_suggestions_for_unscoped_pages() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -3858,6 +3913,7 @@ async fn ai_suggestion_decisions_accept_reject_and_conflict() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -4017,6 +4073,7 @@ async fn ai_suggestion_accept_rejects_when_concurrent_decision_wins_race() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
     let workspace = service
         .create_workspace(CreateWorkspaceCommand {
@@ -4109,7 +4166,7 @@ async fn ai_suggestion_accept_rejects_when_concurrent_decision_wins_race() {
         END
         "#
     );
-    sqlx::query(&trigger_sql)
+    sqlx::query(sqlx::AssertSqlSafe(trigger_sql))
         .execute(&pool)
         .await
         .expect("concurrent suggestion decision trigger should be installed");
@@ -4120,7 +4177,10 @@ async fn ai_suggestion_accept_rejects_when_concurrent_decision_wins_race() {
             ai_suggestion_id: suggestion_id,
         })
         .await;
-    assert!(matches!(accept_result, Err(CanvasProductError::Conflict(_))));
+    assert!(matches!(
+        accept_result,
+        Err(CanvasProductError::Conflict(_))
+    ));
 }
 
 #[tokio::test]
@@ -4143,6 +4203,7 @@ async fn accepted_ai_suggestion_applies_drive_backed_page_content() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -4303,6 +4364,7 @@ async fn ai_suggestion_apply_rejects_oversized_content_metadata_before_drive_con
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -4427,6 +4489,7 @@ async fn stale_ai_suggestion_apply_requires_current_drive_version() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -4580,6 +4643,7 @@ async fn ai_suggestion_apply_does_not_advance_canvas_pointer_when_suggestion_sta
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -4710,6 +4774,7 @@ async fn ai_suggestion_apply_rejects_drive_snapshot_that_does_not_advance_versio
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -4852,6 +4917,7 @@ async fn ai_suggestion_apply_rejects_drive_snapshot_with_unexpected_content_meta
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -5000,6 +5066,7 @@ async fn proposed_ai_suggestion_cannot_be_applied() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -5110,6 +5177,7 @@ async fn ai_suggestion_feedback_is_recorded_for_quality_loop() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let workspace = service
@@ -5243,6 +5311,7 @@ async fn ai_suggestion_feedback_replays_when_concurrent_insert_wins_race() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     let feedback = service
@@ -5288,6 +5357,7 @@ async fn invalid_ai_suggestion_feedback_type_is_rejected() {
         tenant_id: "100001".to_string(),
         organization_id: "0".to_string(),
         operator_id: "30".to_string(),
+        caller: sdkwork_canvas_pages_service::domain::CallerCredentials::default(),
     };
 
     service
@@ -5478,11 +5548,7 @@ impl CanvasRepository for ConcurrentMetadataRepository {
         unreachable!("concurrency test does not update Drive snapshots")
     }
 
-    async fn delete_page(
-        &self,
-        _: &CanvasActorContext,
-        _: &str,
-    ) -> Result<(), CanvasProductError> {
+    async fn delete_page(&self, _: &CanvasActorContext, _: &str) -> Result<(), CanvasProductError> {
         unreachable!("concurrency test does not delete pages")
     }
 
@@ -5790,11 +5856,7 @@ impl CanvasRepository for ConcurrentPageInsertRepository {
         unreachable!("concurrency test does not update Drive snapshots")
     }
 
-    async fn delete_page(
-        &self,
-        _: &CanvasActorContext,
-        _: &str,
-    ) -> Result<(), CanvasProductError> {
+    async fn delete_page(&self, _: &CanvasActorContext, _: &str) -> Result<(), CanvasProductError> {
         unreachable!("concurrency test does not delete pages")
     }
 
@@ -6038,11 +6100,7 @@ impl CanvasRepository for PanicOnAiJobTargetRepository {
         unreachable!("target validation should run before Drive pointer update")
     }
 
-    async fn delete_page(
-        &self,
-        _: &CanvasActorContext,
-        _: &str,
-    ) -> Result<(), CanvasProductError> {
+    async fn delete_page(&self, _: &CanvasActorContext, _: &str) -> Result<(), CanvasProductError> {
         unreachable!("target validation should run before page delete")
     }
 
@@ -6288,11 +6346,7 @@ impl CanvasRepository for ConcurrentAiJobIdempotencyRepository {
         unreachable!("concurrency test does not update Drive snapshots")
     }
 
-    async fn delete_page(
-        &self,
-        _: &CanvasActorContext,
-        _: &str,
-    ) -> Result<(), CanvasProductError> {
+    async fn delete_page(&self, _: &CanvasActorContext, _: &str) -> Result<(), CanvasProductError> {
         unreachable!("concurrency test does not delete pages")
     }
 
@@ -6555,11 +6609,7 @@ impl CanvasRepository for ConcurrentAiFeedbackIdempotencyRepository {
         unreachable!("concurrency test does not update Drive snapshots")
     }
 
-    async fn delete_page(
-        &self,
-        _: &CanvasActorContext,
-        _: &str,
-    ) -> Result<(), CanvasProductError> {
+    async fn delete_page(&self, _: &CanvasActorContext, _: &str) -> Result<(), CanvasProductError> {
         unreachable!("concurrency test does not delete pages")
     }
 
@@ -6834,11 +6884,7 @@ impl CanvasRepository for ConcurrentDriveSnapshotRepository {
         unreachable!("stale drive version should conflict before returning")
     }
 
-    async fn delete_page(
-        &self,
-        _: &CanvasActorContext,
-        _: &str,
-    ) -> Result<(), CanvasProductError> {
+    async fn delete_page(&self, _: &CanvasActorContext, _: &str) -> Result<(), CanvasProductError> {
         unreachable!("concurrency test does not delete pages")
     }
 
@@ -7093,7 +7139,8 @@ impl DrivePageContentPort for FakeDrivePageContentPort {
     async fn create_page_content(
         &self,
         command: CreateDrivePageContentCommand,
-    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError> {
+    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError>
+    {
         {
             let mut create_counts = self.create_counts.lock().await;
             let count = create_counts.entry(command.page_id.clone()).or_insert(0);
@@ -7140,7 +7187,8 @@ impl DrivePageContentPort for FakeDrivePageContentPort {
     async fn update_page_content(
         &self,
         command: UpdateDrivePageContentCommand,
-    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError> {
+    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError>
+    {
         *self.last_update_request.lock().await = Some(command.clone());
         {
             let mut update_counts = self.update_counts.lock().await;
@@ -7200,7 +7248,8 @@ impl DrivePageContentPort for FakeDrivePageContentPort {
     async fn restore_page_content_version(
         &self,
         command: RestoreDrivePageContentVersionCommand,
-    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError> {
+    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError>
+    {
         *self.last_restore_request.lock().await = Some(command.clone());
         let source = self
             .versions
@@ -7258,7 +7307,8 @@ impl DrivePageContentPort for FakeDrivePageContentPort {
     async fn read_page_content(
         &self,
         command: ReadDrivePageContentCommand,
-    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError> {
+    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError>
+    {
         let mut snapshot = self
             .records
             .lock()
@@ -7371,14 +7421,16 @@ impl DrivePageContentPort for RejectSuggestionDuringDriveUpdatePort {
     async fn create_page_content(
         &self,
         command: CreateDrivePageContentCommand,
-    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError> {
+    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError>
+    {
         self.inner.create_page_content(command).await
     }
 
     async fn update_page_content(
         &self,
         command: UpdateDrivePageContentCommand,
-    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError> {
+    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError>
+    {
         let snapshot = self.inner.update_page_content(command).await?;
         let reject_target = self.reject_during_next_update.lock().await.take();
         if let Some((pool, suggestion_id)) = reject_target {
@@ -7398,14 +7450,16 @@ impl DrivePageContentPort for RejectSuggestionDuringDriveUpdatePort {
     async fn read_page_content(
         &self,
         command: ReadDrivePageContentCommand,
-    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError> {
+    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError>
+    {
         self.inner.read_page_content(command).await
     }
 
     async fn restore_page_content_version(
         &self,
         command: RestoreDrivePageContentVersionCommand,
-    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError> {
+    ) -> Result<DrivePageContentSnapshot, sdkwork_canvas_pages_service::error::CanvasProductError>
+    {
         self.inner.restore_page_content_version(command).await
     }
 
