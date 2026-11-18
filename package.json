@@ -49,11 +49,11 @@
     "db:postgres:init": "node scripts/dev/sdkwork-canvas-postgres-db.mjs --mode init --config config/host/postgres.env",
     "db:postgres:migrate": "node scripts/dev/sdkwork-canvas-postgres-db.mjs --mode migrate --config config/host/postgres.env",
     "sdk:shared:prepare": "node scripts/dev/prepare-shared-sdk-git-sources.mjs",
-    "release:build": "node scripts/release/run-sdkwork-canvas-pc-release-build.mjs",
+    "release:build": "pnpm run check:release-access-token:require-anchor && node scripts/release/run-sdkwork-canvas-pc-release-build.mjs",
     "release:plan": "node scripts/release/plan-sdkwork-canvas-install-packages.mjs",
     "release:build:prod": "node scripts/release/build-sdkwork-canvas-production.mjs",
-    "release:stage": "node scripts/release/stage-sdkwork-canvas-release-package.mjs",
-    "release:package": "node scripts/release/build-sdkwork-canvas-install-package.mjs",
+    "release:stage": "pnpm run check:release-access-token:require-anchor && node scripts/release/stage-sdkwork-canvas-release-package.mjs",
+    "release:package": "pnpm run check:release-access-token:require-anchor && node scripts/release/build-sdkwork-canvas-install-package.mjs",
     "release:package:check": "node scripts/release/build-sdkwork-canvas-install-package.mjs --check --dry-run --all",
     "release:validate": "node scripts/release/validate-sdkwork-canvas-install-artifacts.mjs",
     "release:build:desktop": "node scripts/release/build-sdkwork-canvas-production.mjs --target desktop",
@@ -109,7 +109,8 @@
     "build:pc:test:cloud": "node ../sdkwork-specs/tools/build-browser-client.mjs --root . --architecture pc --environment test --deployment-profile cloud",
     "build:pc:staging:cloud": "node ../sdkwork-specs/tools/build-browser-client.mjs --root . --architecture pc --environment staging --deployment-profile cloud",
     "build:pc:demo:cloud": "node ../sdkwork-specs/tools/build-browser-client.mjs --root . --architecture pc --environment demo --deployment-profile cloud",
-    "build:pc:prod:cloud": "node ../sdkwork-specs/tools/build-browser-client.mjs --root . --architecture pc --environment prod --deployment-profile cloud"
+    "build:pc:prod:cloud": "node ../sdkwork-specs/tools/build-browser-client.mjs --root . --architecture pc --environment prod --deployment-profile cloud",
+    "check:release-access-token:require-anchor": "node ../sdkwork-specs/tools/check-release-access-token-env.mjs --root . --require-anchor"
   },
   "exports": {
     ".": {
